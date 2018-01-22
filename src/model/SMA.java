@@ -1,46 +1,56 @@
 package model;
 
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Observable;
 import java.util.Random;
 
-public class SMA {
+public class SMA extends Observable{
 
-	private int timePerFrame = 100;
+	private int ticks = 0;
+	public static Random rd;
+	private Parameters params;
 	private int sleepTime;
-	private final Grid grid = new Grid();
+	private Grid grid;
 	private List<Agent> agents = new ArrayList<Agent>();
-	public static Random rd = new Random(12345);
+	private Scheduler scheduler;
 
 	public SMA() {
+		params = new Parameters("config.cfg");
+		loadParameters();
 		createAgents();
 	}
 
+	private void loadParameters() {
+		rd = new Random(params.getSeed());
+		grid = new Grid(params.getGridWidth(), params.getGridHeight());
+		sleepTime = params.getDelay();
+		scheduler = params.getScheduler();
+		grid.setTorique(params.isTorique());
+	}
+
 	private void createAgents() {
-		
-		int nbAgent = (int) (0.2*grid.getSize());
-		
-		for(int i = 0; i < nbAgent; i++){
+
+		//		for(int i = 0; i < 10; i++){
+		//			Agent agent = new Agent(grid);
+		//			agents.add(agent);
+		//			agent.setVelocityX(1);
+		//			agent.setVelocityY(0);
+		//			agent.setPosition(i, 0);
+		//		 }
+
+		for(int i = 0; i < params.getNbParticules(); i++){
 			Agent agent = new Agent(grid);
 			agents.add(agent);
 		}
-		sleepTime = timePerFrame/nbAgent;
 	}
 
 	public void run(){
-		while(true){
-			Collections.shuffle(agents, rd);
-			for(Agent agent : agents){
-				agent.setColor(Color.GRAY);
-				grid.update();
-			}
+		while(ticks < params.getNbTicks() || params.getNbTicks() == 0){
+			ticks++;
+			notifyObservers();
 			sleep(sleepTime);
-			for(Agent agent : agents){
-				agent.decide();
-				sleep(sleepTime);
-			}
+			scheduler.schedule(agents);
 		}
 	}
 
@@ -54,6 +64,12 @@ public class SMA {
 
 	public Grid getGrid() {
 		return grid;
+	}
+
+	@Override
+	public void notifyObservers() {
+		this.setChanged();
+		super.notifyObservers();
 	}
 
 }

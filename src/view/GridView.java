@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -27,7 +28,6 @@ public class GridView extends JPanel implements Observer{
 
 	public GridView(Grid grid) {
 		this.grid = grid;
-		grid.addObserver(this);
 	}
 
 	@Override
@@ -38,12 +38,12 @@ public class GridView extends JPanel implements Observer{
 
 	private void paintGrid(Graphics g) {
 		
-		cellSize = getCorrectSize()/grid.getSize();
-		widthPadding = (this.getWidth() - grid.getSize() * cellSize) / 2;
-		heightPadding = (this.getHeight() - grid.getSize() * cellSize) / 2;
+		cellSize = getCorrectSize() / ((grid.getWidth() > grid.getHeight()) ? grid.getWidth() : grid.getHeight());
+		widthPadding = (this.getWidth() - grid.getWidth() * cellSize) / 2;
+		heightPadding = (this.getHeight() - grid.getHeight() * cellSize) / 2;
 
-		for (int i = 0; i < grid.getSize(); i++) {
-			for (int j = 0; j < grid.getSize(); j++) {
+		for (int i = 0; i < grid.getHeight(); i++) {
+			for (int j = 0; j < grid.getWidth(); j++) {
 
 				Agent agent = grid.getAgentToPos(j, i);
 
@@ -52,7 +52,7 @@ public class GridView extends JPanel implements Observer{
 					g.fill3DRect(j * cellSize + widthPadding, i * cellSize + heightPadding, cellSize, cellSize, true);
 
 				} else {
-					g.setColor(Color.WHITE);
+					g.setColor(Color.BLACK);
 					g.fillRect(j * cellSize + widthPadding, i * cellSize + heightPadding, cellSize, cellSize);
 
 				}
@@ -64,9 +64,9 @@ public class GridView extends JPanel implements Observer{
 		return this.getWidth() > this.getHeight() ? this.getHeight() : this.getWidth();
 	}
 	
-	public void display() {
-		for(int i = 0; i < grid.getSize(); i++){
-			for(int j = 0; j < grid.getSize(); j++){
+	public void displayAscii() {
+		for(int i = 0; i < grid.getHeight(); i++){
+			for(int j = 0; j < grid.getWidth(); j++){
 				if(!grid.isEmpty(j, i)){
 					System.out.print("O");
 				} else {
@@ -80,8 +80,8 @@ public class GridView extends JPanel implements Observer{
 
 	@Override
 	public void update(Observable o, Object arg) {
-		repaint();	
-//		display();
+		this.repaint();
+		Toolkit.getDefaultToolkit().sync();
 	}
 
 }

@@ -7,7 +7,7 @@ public class Agent {
 	private int x,y, velocityX, velocityY;
 	private Grid grid;
 	private Color color;
-	
+
 	public Agent(Grid grid) {
 		this.grid = grid;
 		color = Color.GRAY;
@@ -17,18 +17,18 @@ public class Agent {
 	private void initializeRandomPositionAndVelocity() {
 
 		do {
-			x = SMA.rd.nextInt(grid.getSize());
-			y = SMA.rd.nextInt(grid.getSize());
+			x = SMA.rd.nextInt(grid.getWidth());
+			y = SMA.rd.nextInt(grid.getHeight());
 		} while(!grid.isEmpty(x, y));
 
 		setPosition(x, y);
 
 		do{
 			// Force the velocity to be != than 0 on at least 1 axis.
-			velocityX = SMA.rd.nextInt(2);
-			velocityY = SMA.rd.nextInt(2);
-		} while(velocityX == 0 || velocityY == 0);
-		
+			velocityX = SMA.rd.nextBoolean() ? SMA.rd.nextBoolean() ? 1 : 0 : -1;
+			velocityY = SMA.rd.nextBoolean() ? SMA.rd.nextBoolean() ? 1 : 0 : -1;
+		} while(velocityX == 0 && velocityY == 0);
+
 	}
 
 	public void update(){
@@ -37,10 +37,9 @@ public class Agent {
 	}
 
 	public void decide(){
-		color = Color.BLUE;
 
 		handleCollision();
-		
+
 		if(canMove()){
 			move();
 		}
@@ -50,7 +49,7 @@ public class Agent {
 
 	private boolean canMove() {
 		// Next position inbound.
-		if(getNextX() >= 0 && getNextX() < grid.getSize() && getNextY() >= 0 && getNextY() < grid.getSize()){
+		if(getNextX() >= 0 && getNextX() < grid.getWidth() && getNextY() >= 0 && getNextY() < grid.getHeight()){
 			// Next position free.
 			if(grid.isEmpty(getNextX(), getNextY())){
 				return true;
@@ -67,7 +66,7 @@ public class Agent {
 		// Update the position.
 		x = getNextX();
 		y = getNextY();
-		
+
 		// Set itself to the next position.
 		grid.setAgentToPos(this, x, y);
 
@@ -75,40 +74,40 @@ public class Agent {
 
 	private void handleCollision() {
 
-		// If any collision has been detected.
-		boolean collide = false;
-
 		// Check for grid collision and apply the correct velocity.
-		if(getNextX() >= grid.getSize() || getNextX() < 0){
-			collide = true;
-			velocityX = -velocityX;
-		}
+		if(!grid.isTorique()){
 
-		if(getNextY() >= grid.getSize() || getNextY() < 0){
-			collide = true;
-			velocityY = -velocityY;
+			if(getNextX() >= grid.getWidth() || getNextX() < 0){
+				velocityX = -velocityX;
+				color = Color.BLUE;
+			}
+
+			if(getNextY() >= grid.getHeight() || getNextY() < 0){
+				velocityY = -velocityY;
+				color = Color.BLUE;
+			}
 		}
 
 		if(!grid.isEmpty(getNextX(), getNextY())){
-			collide = true;
 			Agent collider = grid.getAgentToPos(getNextX(), getNextY());
-			collider.setColor(Color.RED);
 			swapVelocity(collider);
+//			if(color == Color.GRAY)
+				setColor(Color.RED);
+			collider.setColor(color);
 		}
 
-		if(collide){
-			color = Color.RED;
+	}
+
+	public void setPosition(int x2, int y2) {
+		// Remove itself from any previous position.
+		if(grid.getAgentToPos(x, y) == this){
+			grid.setAgentToPos(null, x, y);
 		}
+		x = x2;
+		y = y2;
+		// Set itself back in the current position.
+		grid.setAgentToPos(this, x, y);
 	}
-
-	private int getNextX() {
-		return x + velocityX;
-	}
-
-	private int getNextY() {
-		return y + velocityY;
-	}
-
 
 	private void swapVelocity(Agent collider) {
 		int colliderVelocityX = collider.getVelocityX();
@@ -119,6 +118,34 @@ public class Agent {
 
 		this.setVelocityX(colliderVelocityX);
 		this.setVelocityY(colliderVelocityY);
+	}
+
+	private int getNextX() {
+		int nextX = x + velocityX;
+		if(grid.isTorique()){
+
+			if(nextX >= grid.getWidth()){
+				return 0;			
+			} 
+			else if (nextX < 0){
+				return grid.getWidth() - 1;	
+			}
+		}
+		return nextX;
+	}
+
+	private int getNextY() {
+		int nextY = y + velocityY;
+
+		if(grid.isTorique()){
+			if(nextY >= grid.getHeight()){
+				return 0;			
+			} 
+			else if (nextY < 0){
+				return grid.getHeight() - 1;	
+			}
+		}
+		return nextY;
 	}
 
 	public int getVelocityX() {
@@ -143,17 +170,6 @@ public class Agent {
 
 	public void setColor(Color color) {
 		this.color = color;
-	}
-
-	public void setPosition(int x2, int y2) {
-		// Remove itself from any previous position.
-		if(grid.getAgentToPos(x, y) == this){
-			grid.setAgentToPos(null, x, y);
-		}
-		x = x2;
-		y = y2;
-		// Set itself back in the current position.
-		grid.setAgentToPos(this, x, y);
 	}
 
 }

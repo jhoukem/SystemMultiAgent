@@ -1,25 +1,18 @@
 package model;
 
-import java.util.Observable;
-
-public class Grid extends Observable {
+public class Grid {
 
 
-	private int gridSize = 130;
 	private Agent gridAgent[][];
 	private boolean isTorique = false;
 
-	public Grid() {
-		gridAgent = new Agent[gridSize][gridSize];
+	public Grid(int width, int height) {
+		gridAgent = new Agent[height][width];
 
 	}
 
 	public void setAgentToPos(Agent agent, int x, int y){
 		gridAgent[y][x] = agent;
-		
-		if(agent != null)
-			notifyObservers();
-
 	}
 
 	public Agent getAgentToPos(int x, int y){
@@ -38,30 +31,24 @@ public class Grid extends Observable {
 		this.isTorique = isTorique;
 	}
 
-	public int getSize(){
-		return gridSize;
+	public int getWidth(){
+		return gridAgent[0].length;
 	}
-
-	@Override
-	public void notifyObservers() {
-		this.setChanged();
-		super.notifyObservers();
+	
+	public int getHeight(){
+		return gridAgent.length;
 	}
 
 	public int nbAgents() {
 		int count = 0;
-		for (int i = 0; i < getSize(); i++) {
-			for (int j = 0; j < getSize(); j++) {
+		for (int i = 0; i < getHeight(); i++) {
+			for (int j = 0; j < getWidth(); j++) {
 				if(gridAgent[i][j] != null){
 					count++;
 				}
 			}
 		}
 		return count;
-	}
-
-	public void update() {
-		notifyObservers();
 	}
 
 }
