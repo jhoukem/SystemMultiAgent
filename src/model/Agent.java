@@ -91,7 +91,7 @@ public class Agent {
 		if(!grid.isEmpty(getNextX(), getNextY())){
 			Agent collider = grid.getAgentToPos(getNextX(), getNextY());
 			swapVelocity(collider);
-//			if(color == Color.GRAY)
+			if(color == Color.GRAY)
 				setColor(Color.RED);
 			collider.setColor(color);
 		}

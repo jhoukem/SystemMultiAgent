@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 import model.Agent;
 import model.Grid;
+import model.Parameters;
 
 public class GridView extends JPanel implements Observer{
 
@@ -24,10 +25,11 @@ public class GridView extends JPanel implements Observer{
 	protected int cellSize;
 	protected int widthPadding;
 	protected int heightPadding;
+	private boolean displayGrid = false;
 
-
-	public GridView(Grid grid) {
+	public GridView(Grid grid, Parameters parameters) {
 		this.grid = grid;
+		displayGrid = parameters.isDisplayGrid();
 	}
 
 	@Override
@@ -37,7 +39,12 @@ public class GridView extends JPanel implements Observer{
 	}
 
 	private void paintGrid(Graphics g) {
-		
+
+		// Clear the screen.
+		g.setColor(Color.WHITE);
+		g.drawRect(0, 0, this.getWidth(), this.getHeight());
+
+		// Get the correct size based on the grid size and the frame size.
 		cellSize = getCorrectSize() / ((grid.getWidth() > grid.getHeight()) ? grid.getWidth() : grid.getHeight());
 		widthPadding = (this.getWidth() - grid.getWidth() * cellSize) / 2;
 		heightPadding = (this.getHeight() - grid.getHeight() * cellSize) / 2;
@@ -51,19 +58,25 @@ public class GridView extends JPanel implements Observer{
 					g.setColor(agent.getColor());
 					g.fill3DRect(j * cellSize + widthPadding, i * cellSize + heightPadding, cellSize, cellSize, true);
 
-				} else {
-					g.setColor(Color.BLACK);
-					g.fillRect(j * cellSize + widthPadding, i * cellSize + heightPadding, cellSize, cellSize);
-
 				}
+			}
+		}
 
+		if(displayGrid){
+			g.setColor(Color.BLACK);
+			for (int i = 0; i <= grid.getHeight(); i++) {
+				g.drawLine(widthPadding, i * cellSize, this.getWidth() - widthPadding, i * cellSize);
+			}
+			for (int j = 0; j <= grid.getWidth(); j++) {
+				g.drawLine(j * cellSize + widthPadding, heightPadding, j * cellSize + widthPadding, this.getHeight() - heightPadding);
 			}
 		}
 	}
+	
 	private int getCorrectSize() {
 		return this.getWidth() > this.getHeight() ? this.getHeight() : this.getWidth();
 	}
-	
+
 	public void displayAscii() {
 		for(int i = 0; i < grid.getHeight(); i++){
 			for(int j = 0; j < grid.getWidth(); j++){

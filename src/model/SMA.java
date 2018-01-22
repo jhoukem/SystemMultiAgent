@@ -71,5 +71,9 @@ public class SMA extends Observable{
 		this.setChanged();
 		super.notifyObservers();
 	}
+	
+	public Parameters getParameters() {
+		return params;
+	}
 
 }

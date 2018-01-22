@@ -33,6 +33,7 @@ public class Parameters {
 
 	private void setParams() {
 		isTorique = Boolean.parseBoolean(properties.getProperty("isTorique"));
+		displayGrid = Boolean.parseBoolean(properties.getProperty("displayGrid"));
 		
 		try{
 			gridWidth = Integer.parseInt(properties.getProperty("gridWidth"));

@@ -13,8 +13,8 @@ public class SMAFrame extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final int WIDTH = 1800;
-	public static final int HEIGHT = 900;
+	public static final int WIDTH = 900;
+	public static final int HEIGHT = 700;
 
 	private SMA sma;
 
@@ -22,7 +22,7 @@ public class SMAFrame extends JFrame{
 	public SMAFrame() {
 		sma = new SMA();
 
-		GridView gridPanel = new GridView(sma.getGrid());
+		GridView gridPanel = new GridView(sma.getGrid(), sma.getParameters());
 		sma.addObserver(gridPanel);
 		
 		this.setLayout(new BorderLayout());
