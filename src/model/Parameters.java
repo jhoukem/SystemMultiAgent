@@ -12,7 +12,7 @@ public class Parameters {
 	private int delay;// Done
 	private Scheduler scheduler;// Done
 	private int nbTicks;// Done
-	private boolean displayGrid;
+	private boolean displayGrid; // Done
 	private boolean trace;
 	private int seed;// Done
 	private int nbParticules;// Done
@@ -34,6 +34,7 @@ public class Parameters {
 	private void setParams() {
 		isTorique = Boolean.parseBoolean(properties.getProperty("isTorique"));
 		displayGrid = Boolean.parseBoolean(properties.getProperty("displayGrid"));
+		trace = Boolean.parseBoolean(properties.getProperty("trace"));
 		
 		try{
 			gridWidth = Integer.parseInt(properties.getProperty("gridWidth"));

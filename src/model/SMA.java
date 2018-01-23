@@ -40,18 +40,21 @@ public class SMA extends Observable{
 		//		 }
 
 		for(int i = 0; i < params.getNbParticules(); i++){
-			Agent agent = new Agent(grid);
+			Agent agent = new Agent(grid, i);
 			agents.add(agent);
+			agent.setTrace(params.isTrace());
 		}
 	}
 
 	public void run(){
 		while(ticks < params.getNbTicks() || params.getNbTicks() == 0){
-			ticks++;
+			Logger.log("Tick;"+ticks);
 			notifyObservers();
 			sleep(sleepTime);
 			scheduler.schedule(agents);
+			ticks++;
 		}
+		Logger.close();
 	}
 
 	private void sleep(int sleepTime) {
@@ -71,7 +74,7 @@ public class SMA extends Observable{
 		this.setChanged();
 		super.notifyObservers();
 	}
-	
+
 	public Parameters getParameters() {
 		return params;
 	}

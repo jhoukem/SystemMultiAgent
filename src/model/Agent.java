@@ -4,11 +4,14 @@ import java.awt.Color;
 
 public class Agent {
 
+	private int id;
 	private int x,y, velocityX, velocityY;
 	private Grid grid;
 	private Color color;
+	private boolean isTrace;
 
-	public Agent(Grid grid) {
+	public Agent(Grid grid, int id) {
+		this.id = id;
 		this.grid = grid;
 		color = Color.GRAY;
 		initializeRandomPositionAndVelocity();
@@ -69,7 +72,7 @@ public class Agent {
 
 		// Set itself to the next position.
 		grid.setAgentToPos(this, x, y);
-
+		
 	}
 
 	private void handleCollision() {
@@ -80,22 +83,37 @@ public class Agent {
 			if(getNextX() >= grid.getWidth() || getNextX() < 0){
 				velocityX = -velocityX;
 				color = Color.BLUE;
+				if(isTrace()){
+					logInfos();
+				}
 			}
 
 			if(getNextY() >= grid.getHeight() || getNextY() < 0){
 				velocityY = -velocityY;
 				color = Color.BLUE;
+				if(isTrace()){
+					logInfos();
+				}
 			}
 		}
 
 		if(!grid.isEmpty(getNextX(), getNextY())){
 			Agent collider = grid.getAgentToPos(getNextX(), getNextY());
 			swapVelocity(collider);
-			if(color == Color.GRAY)
+//			if(color == Color.GRAY)
 				setColor(Color.RED);
 			collider.setColor(color);
+			if(isTrace()){
+				logInfos();
+				collider.logInfos();
+			}
 		}
 
+	}
+
+	private void logInfos() {
+		Logger.log("Agent;"+ id +";"+ x +";"+ y +";"+ velocityX +";"+ velocityY);
+		
 	}
 
 	public void setPosition(int x2, int y2) {
@@ -170,6 +188,14 @@ public class Agent {
 
 	public void setColor(Color color) {
 		this.color = color;
+	}
+	
+	public boolean isTrace(){
+		return isTrace;
+	}
+
+	public void setTrace(boolean trace) {
+		isTrace = trace;
 	}
 
 }
