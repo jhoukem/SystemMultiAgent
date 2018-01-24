@@ -1,15 +1,20 @@
-package model;
+package utils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import scheduler.EquitableScheduler;
+import scheduler.RandomScheduler;
+import scheduler.Scheduler;
+import scheduler.SequentialScheduler;
+
 public class Parameters {
 
 	private boolean isTorique;// Done
-	private int width, height;
-	private int cellSize;
+	private int width, height; // Done
+	private int cellSize; // Done
 	private int gridWidth, gridHeight;// Done
 	private int delay;// Done
 	private int refreshRate;// Done

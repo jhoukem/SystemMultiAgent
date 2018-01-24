@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Random;
 
+import scheduler.Scheduler;
+import utils.Logger;
+import utils.Parameters;
+
 public class SMA extends Observable{
 
 	private static final String CONFIG_FILE = "config.cfg";
@@ -23,12 +27,20 @@ public class SMA extends Observable{
 	}
 
 	private void loadParameters() {
-		rd = new Random(params.getSeed());
+		
+		if(params.getSeed() > -1){
+			rd = new Random(params.getSeed());
+		} else {
+			rd = new Random();
+		}
 		grid = new Grid(params.getGridWidth(), params.getGridHeight());
 		sleepTime = params.getDelay();
 		scheduler = params.getScheduler();
 		grid.setTorique(params.isTorique());
-		Logger.initialize(params.getLogFile());
+		
+		if(params.isTrace()){
+			Logger.initialize(params.getLogFile());
+		}
 	}
 
 	private void createAgents() {
@@ -42,7 +54,9 @@ public class SMA extends Observable{
 
 	public void run(){
 		while(tick < params.getTicks() || params.getTicks() == 0){
-			Logger.log("Tick;"+tick);
+			if(params.isTrace()){
+				Logger.log("Tick;"+tick);
+			}
 			if(tick % params.getRefreshRate() == 0){
 				notifyObservers();
 			}

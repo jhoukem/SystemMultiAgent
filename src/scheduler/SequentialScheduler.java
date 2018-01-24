@@ -1,6 +1,8 @@
-package model;
+package scheduler;
 
 import java.util.List;
+
+import model.Agent;
 
 public class SequentialScheduler implements Scheduler{
 

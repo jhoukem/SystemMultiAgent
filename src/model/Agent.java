@@ -2,6 +2,8 @@ package model;
 
 import java.awt.Color;
 
+import utils.Logger;
+
 public class Agent {
 
 	private int id;

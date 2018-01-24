@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 import model.Agent;
 import model.Grid;
-import model.Parameters;
+import utils.Parameters;
 
 public class GridView extends JPanel implements Observer{
 

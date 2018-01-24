@@ -5,8 +5,8 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
-import model.Parameters;
 import model.SMA;
+import utils.Parameters;
 
 public class SMAFrame extends JFrame{
 

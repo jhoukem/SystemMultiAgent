@@ -1,7 +1,10 @@
-package model;
+package scheduler;
 
 import java.util.Collections;
 import java.util.List;
+
+import model.Agent;
+import model.SMA;
 
 public class EquitableScheduler implements Scheduler{
 
