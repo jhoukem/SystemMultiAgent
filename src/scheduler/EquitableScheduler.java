@@ -13,6 +13,7 @@ public class EquitableScheduler implements Scheduler{
 		Collections.shuffle(agents, SMA.rd);
 		for(Agent agent : agents){
 			agent.decide();
+			agent.update();
 		}
 	}
 

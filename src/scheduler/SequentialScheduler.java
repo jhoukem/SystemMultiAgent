@@ -10,6 +10,7 @@ public class SequentialScheduler implements Scheduler{
 	public void schedule(List<Agent> agents) {
 		for(Agent agent : agents){
 			agent.decide();
+			agent.update();
 		}
 	}
 }

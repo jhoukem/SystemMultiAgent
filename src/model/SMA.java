@@ -1,13 +1,12 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Random;
 
 import scheduler.Scheduler;
 import utils.Logger;
 import utils.Parameters;
+import wator.PreyAgent;
 
 public class SMA extends Observable{
 
@@ -17,7 +16,6 @@ public class SMA extends Observable{
 	private Parameters params;
 	private int sleepTime;
 	private Grid grid;
-	private List<Agent> agents = new ArrayList<Agent>();
 	private Scheduler scheduler;
 
 	public SMA() {
@@ -45,10 +43,11 @@ public class SMA extends Observable{
 
 	private void createAgents() {
 
-		for(int i = 0; i < params.getNbParticules(); i++){
-			Agent agent = new Agent(grid, i);
-			agents.add(agent);
+		for(int i = 0; i < params.getParticulesCount(); i++){
+			Agent agent = new PreyAgent(grid);
+			agent.initializeRandomPositionAndVelocity();
 			agent.setTrace(params.isTrace());
+			grid.add(agent);
 		}
 	}
 
@@ -61,7 +60,9 @@ public class SMA extends Observable{
 				notifyObservers();
 			}
 			sleep(sleepTime);
-			scheduler.schedule(agents);
+			scheduler.schedule(grid.getAgents());
+			grid.removeDeadAgents();
+			grid.addNewAgents();
 			tick++;
 		}
 		Logger.close();

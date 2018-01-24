@@ -4,22 +4,24 @@ import java.awt.Color;
 
 import utils.Logger;
 
-public class Agent {
+public abstract class Agent {
 
-	private int id;
-	private int x,y, velocityX, velocityY;
-	private Grid grid;
-	private Color color;
+	protected int id;
+	protected int x,y, velocityX, velocityY;
+	protected Grid grid;
+	protected Color color;
 	private boolean isTrace;
 
-	public Agent(Grid grid, int id) {
-		this.id = id;
+	public Agent(Grid grid) {
+		this.id = grid.getNextAgentId();
 		this.grid = grid;
-		color = Color.GRAY;
-		initializeRandomPositionAndVelocity();
+		color = Color.WHITE;
 	}
 
-	private void initializeRandomPositionAndVelocity() {
+	public abstract void update();
+	public abstract void decide();
+
+	public void initializeRandomPositionAndVelocity() {
 
 		do {
 			x = SMA.rd.nextInt(grid.getWidth());
@@ -36,86 +38,9 @@ public class Agent {
 
 	}
 
-	public void update(){
-
-
-	}
-
-	public void decide(){
-
-		handleCollision();
-
-		if(canMove()){
-			move();
-		}
-	}
-
-
-
-	private boolean canMove() {
-		// Next position inbound.
-		if(getNextX() >= 0 && getNextX() < grid.getWidth() && getNextY() >= 0 && getNextY() < grid.getHeight()){
-			// Next position free.
-			if(grid.isEmpty(getNextX(), getNextY())){
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private void move() {
-
-		// Remove itself from the current position.
-		grid.setAgentToPos(null, x, y);
-
-		// Update the position.
-		x = getNextX();
-		y = getNextY();
-
-		// Set itself to the next position.
-		grid.setAgentToPos(this, x, y);
-		
-	}
-
-	private void handleCollision() {
-
-		// Check for grid collision and apply the correct velocity.
-		if(!grid.isTorique()){
-
-			if(getNextX() >= grid.getWidth() || getNextX() < 0){
-				velocityX = -velocityX;
-				color = Color.BLUE;
-				if(isTrace()){
-					logInfos();
-				}
-			}
-
-			if(getNextY() >= grid.getHeight() || getNextY() < 0){
-				velocityY = -velocityY;
-				color = Color.BLUE;
-				if(isTrace()){
-					logInfos();
-				}
-			}
-		}
-
-		if(!grid.isEmpty(getNextX(), getNextY())){
-			Agent collider = grid.getAgentToPos(getNextX(), getNextY());
-			swapVelocity(collider);
-			if(color == Color.GRAY)
-				setColor(Color.RED);
-			collider.setColor(color);
-			if(isTrace()){
-				logInfos();
-				collider.logInfos();
-			}
-		}
-
-	}
-
-	private void logInfos() {
+	public void logInfos() {
 		Logger.log("Agent;"+ id +";"+ x +";"+ y +";"+ velocityX +";"+ velocityY);
-		
+
 	}
 
 	public void setPosition(int x2, int y2) {
@@ -129,40 +54,31 @@ public class Agent {
 		grid.setAgentToPos(this, x, y);
 	}
 
-	private void swapVelocity(Agent collider) {
-		int colliderVelocityX = collider.getVelocityX();
-		int colliderVelocityY = collider.getVelocityY();
-
-		collider.setVelocityX(this.velocityX);
-		collider.setVelocityY(this.velocityY);
-
-		this.setVelocityX(colliderVelocityX);
-		this.setVelocityY(colliderVelocityY);
-	}
-
-	private int getNextX() {
+	protected int getNextX() {
 		int nextX = x + velocityX;
-		if(grid.isTorique()){
 
-			if(nextX >= grid.getWidth()){
-				return 0;			
-			} 
-			else if (nextX < 0){
-				return grid.getWidth() - 1;	
+		if(grid.isTorus()){
+			if(nextX > 0){
+				nextX = nextX % grid.getWidth();
+			} else {
+				nextX = grid.getWidth() - 1;
 			}
 		}
+
 		return nextX;
 	}
 
-	private int getNextY() {
+	protected int getNextY() {
+		
+		
+//		index % max_size + max_size) % max_size ???
 		int nextY = y + velocityY;
 
-		if(grid.isTorique()){
-			if(nextY >= grid.getHeight()){
-				return 0;			
-			} 
-			else if (nextY < 0){
-				return grid.getHeight() - 1;	
+		if(grid.isTorus()){
+			if(nextY > 0){
+				nextY = nextY % grid.getHeight();
+			} else {
+				nextY = grid.getHeight() - 1;
 			}
 		}
 		return nextY;
@@ -191,7 +107,7 @@ public class Agent {
 	public void setColor(Color color) {
 		this.color = color;
 	}
-	
+
 	public boolean isTrace(){
 		return isTrace;
 	}

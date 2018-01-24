@@ -44,7 +44,7 @@ public class GridView extends JPanel implements Observer{
 	private void paintGrid(Graphics g) {
 
 		// Clear the screen.
-		g.setColor(Color.WHITE);
+		g.setColor(Color.DARK_GRAY);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
 		if(cellSizeAuto){

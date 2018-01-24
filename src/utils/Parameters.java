@@ -23,7 +23,7 @@ public class Parameters {
 	private boolean displayGrid; // Done
 	private boolean trace;
 	private int seed;// Done
-	private int nbParticules;// Done
+	private int particulesCount;// Done
 	private String logFile; //Done
 
 	private Properties properties;
@@ -94,15 +94,19 @@ public class Parameters {
 		
 		try{
 			refreshRate = Integer.parseInt(properties.getProperty("refreshRate"));
+			if(refreshRate < 0){
+				refreshRate = 1;
+			}
 		} catch(NumberFormatException e){
 			e.printStackTrace();
-			refreshRate = 0;
+			refreshRate = 1;
 		}
 
 		try{
 			ticks = Integer.parseInt(properties.getProperty("ticks"));
 		} catch(NumberFormatException e){
 			e.printStackTrace();
+			ticks = 0;
 		}
 
 		try{
@@ -112,13 +116,26 @@ public class Parameters {
 			seed = 1;
 		}
 
+		boolean defaultParticles = false;
+		
 		try{
-			nbParticules = Integer.parseInt(properties.getProperty("nbParticules"));
+			particulesCount = Integer.parseInt(properties.getProperty("particulesCount"));
+			if(particulesCount <= 0){
+				defaultParticles = true;
+			} else if(particulesCount > gridWidth*gridHeight){
+				defaultParticles = true;
+				System.err.println("The number of particule is superior of the number of cell ( "+gridWidth * gridHeight+" agents max)");
+			}
 		} catch(NumberFormatException e){
+			defaultParticles = true;
 			e.printStackTrace();
-			nbParticules = (int) (gridWidth * gridHeight * 0.2f);
 		}
 
+		if(defaultParticles){
+			particulesCount = (int) (gridWidth * gridHeight * 0.2f);
+		}
+		
+		
 
 		String schedulerType = properties.getProperty("scheduler");
 		if(schedulerType != null){
@@ -143,7 +160,7 @@ public class Parameters {
 		scheduler = new EquitableScheduler();
 		ticks = 0;
 		seed = 1;
-		nbParticules = (int) (gridWidth * gridHeight * 0.2f);
+		particulesCount = (int) (gridWidth * gridHeight * 0.2f);
 	}
 
 	public String getLogFile() {
@@ -186,8 +203,8 @@ public class Parameters {
 		return seed;
 	}
 
-	public int getNbParticules() {
-		return nbParticules;
+	public int getParticulesCount() {
+		return particulesCount;
 	}
 
 	public int getRefreshRate() {

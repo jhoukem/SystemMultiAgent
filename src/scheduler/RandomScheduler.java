@@ -14,6 +14,7 @@ public class RandomScheduler implements Scheduler{
 		for(int i = 0; i < agents.size(); i++){
 			int index = SMA.rd.nextInt(agents.size());
 			agents.get(index).decide();
+			agents.get(index).update();
 		}
 
 	}
