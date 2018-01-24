@@ -8,14 +8,18 @@ import java.util.Properties;
 public class Parameters {
 
 	private boolean isTorique;// Done
+	private int width, height;
+	private int cellSize;
 	private int gridWidth, gridHeight;// Done
 	private int delay;// Done
+	private int refreshRate;// Done
 	private Scheduler scheduler;// Done
-	private int nbTicks;// Done
+	private int ticks;// Done
 	private boolean displayGrid; // Done
 	private boolean trace;
 	private int seed;// Done
 	private int nbParticules;// Done
+	private String logFile; //Done
 
 	private Properties properties;
 
@@ -32,9 +36,28 @@ public class Parameters {
 	}
 
 	private void setParams() {
-		isTorique = Boolean.parseBoolean(properties.getProperty("isTorique"));
+		isTorique = Boolean.parseBoolean(properties.getProperty("isTorus"));
 		displayGrid = Boolean.parseBoolean(properties.getProperty("displayGrid"));
 		trace = Boolean.parseBoolean(properties.getProperty("trace"));
+		logFile = properties.getProperty("logFile");
+		
+		if(logFile.isEmpty()){
+			logFile = "log.csv";
+		}
+		
+		try{
+			width = Integer.parseInt(properties.getProperty("width"));
+		} catch(NumberFormatException e){
+			e.printStackTrace();
+			width = 900;
+		}
+		
+		try{
+			height = Integer.parseInt(properties.getProperty("height"));
+		} catch(NumberFormatException e){
+			e.printStackTrace();
+			height = 700;
+		}
 		
 		try{
 			gridWidth = Integer.parseInt(properties.getProperty("gridWidth"));
@@ -49,6 +72,13 @@ public class Parameters {
 			e.printStackTrace();
 			gridHeight = 10;
 		}
+		
+		try{
+			cellSize = Integer.parseInt(properties.getProperty("cellSize"));
+		} catch(NumberFormatException e){
+			e.printStackTrace();
+			cellSize = 5;
+		}
 
 		try{
 			delay = Integer.parseInt(properties.getProperty("delay"));
@@ -56,9 +86,16 @@ public class Parameters {
 			e.printStackTrace();
 			delay = 100;
 		}
+		
+		try{
+			refreshRate = Integer.parseInt(properties.getProperty("refreshRate"));
+		} catch(NumberFormatException e){
+			e.printStackTrace();
+			refreshRate = 0;
+		}
 
 		try{
-			nbTicks = Integer.parseInt(properties.getProperty("nbTicks"));
+			ticks = Integer.parseInt(properties.getProperty("ticks"));
 		} catch(NumberFormatException e){
 			e.printStackTrace();
 		}
@@ -99,89 +136,70 @@ public class Parameters {
 		gridHeight = 10;
 		delay = 100;
 		scheduler = new EquitableScheduler();
-		nbTicks = 0;
+		ticks = 0;
 		seed = 1;
 		nbParticules = (int) (gridWidth * gridHeight * 0.2f);
 	}
 
+	public String getLogFile() {
+		return logFile;
+	}
+	
 	public boolean isTorique() {
 		return isTorique;
-	}
-
-	public void setTorique(boolean isTorique) {
-		this.isTorique = isTorique;
 	}
 
 	public int getGridWidth() {
 		return gridWidth;
 	}
 
-	public void setGridSizeX(int gridSizeX) {
-		this.gridWidth = gridSizeX;
-	}
-
 	public int getGridHeight() {
 		return gridHeight;
-	}
-
-	public void setGridSizeY(int gridSizeY) {
-		this.gridHeight = gridSizeY;
 	}
 
 	public int getDelay() {
 		return delay;
 	}
 
-	public void setDelay(int delay) {
-		this.delay = delay;
-	}
-
 	public Scheduler getScheduler() {
 		return scheduler;
 	}
 
-	public void setSchedule(Scheduler scheduler) {
-		this.scheduler = scheduler;
-	}
-
-	public int getNbTicks() {
-		return nbTicks;
-	}
-
-	public void setNbTicks(int nbTicks) {
-		this.nbTicks = nbTicks;
+	public int getTicks() {
+		return ticks;
 	}
 
 	public boolean isDisplayGrid() {
 		return displayGrid;
 	}
 
-	public void setDisplayGrid(boolean displayGrid) {
-		this.displayGrid = displayGrid;
-	}
-
 	public boolean isTrace() {
 		return trace;
-	}
-
-	public void setTrace(boolean trace) {
-		this.trace = trace;
 	}
 
 	public int getSeed() {
 		return seed;
 	}
 
-	public void setSeed(int seed) {
-		this.seed = seed;
-	}
-
 	public int getNbParticules() {
 		return nbParticules;
 	}
 
-	public void setNbParticules(int nbParticules) {
-		this.nbParticules = nbParticules;
+	public int getRefreshRate() {
+		return refreshRate;
 	}
+	
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public int getCellSize() {
+		return cellSize;
+	}
+
 
 }

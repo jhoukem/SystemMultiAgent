@@ -1,9 +1,11 @@
 package view;
 
-import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 
+import model.Parameters;
 import model.SMA;
 
 public class SMAFrame extends JFrame{
@@ -13,22 +15,22 @@ public class SMAFrame extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final int WIDTH = 900;
-	public static final int HEIGHT = 700;
 
 	private SMA sma;
 
-
 	public SMAFrame() {
 		sma = new SMA();
+		Parameters params = sma.getParameters();
 
 		GridView gridPanel = new GridView(sma.getGrid(), sma.getParameters());
 		sma.addObserver(gridPanel);
+		gridPanel.setPreferredSize(new Dimension(params.getCellSize() * params.getGridWidth(), params.getCellSize() * params.getGridHeight()));
 		
-		this.setLayout(new BorderLayout());
-		this.add(gridPanel, BorderLayout.CENTER);
-
-		this.setSize(WIDTH, HEIGHT);
+		JScrollPane scrollPane = new JScrollPane(gridPanel);
+		scrollPane.setSize(new Dimension(params.getWidth(), params.getHeight()));
+		this.setSize(new Dimension(params.getWidth(), params.getHeight()));
+		this.setContentPane(scrollPane);
+		
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);

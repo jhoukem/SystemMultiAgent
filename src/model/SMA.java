@@ -7,7 +7,8 @@ import java.util.Random;
 
 public class SMA extends Observable{
 
-	private int ticks = 0;
+	private static final String CONFIG_FILE = "config.cfg";
+	private int tick = 0;
 	public static Random rd;
 	private Parameters params;
 	private int sleepTime;
@@ -16,7 +17,7 @@ public class SMA extends Observable{
 	private Scheduler scheduler;
 
 	public SMA() {
-		params = new Parameters("config.cfg");
+		params = new Parameters(CONFIG_FILE);
 		loadParameters();
 		createAgents();
 	}
@@ -27,17 +28,10 @@ public class SMA extends Observable{
 		sleepTime = params.getDelay();
 		scheduler = params.getScheduler();
 		grid.setTorique(params.isTorique());
+		Logger.initialize(params.getLogFile());
 	}
 
 	private void createAgents() {
-
-		//		for(int i = 0; i < 10; i++){
-		//			Agent agent = new Agent(grid);
-		//			agents.add(agent);
-		//			agent.setVelocityX(1);
-		//			agent.setVelocityY(0);
-		//			agent.setPosition(i, 0);
-		//		 }
 
 		for(int i = 0; i < params.getNbParticules(); i++){
 			Agent agent = new Agent(grid, i);
@@ -47,12 +41,14 @@ public class SMA extends Observable{
 	}
 
 	public void run(){
-		while(ticks < params.getNbTicks() || params.getNbTicks() == 0){
-			Logger.log("Tick;"+ticks);
-			notifyObservers();
+		while(tick < params.getTicks() || params.getTicks() == 0){
+			Logger.log("Tick;"+tick);
+			if(tick % params.getRefreshRate() == 0){
+				notifyObservers();
+			}
 			sleep(sleepTime);
 			scheduler.schedule(agents);
-			ticks++;
+			tick++;
 		}
 		Logger.close();
 	}

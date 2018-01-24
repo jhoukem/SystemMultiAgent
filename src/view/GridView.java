@@ -26,10 +26,13 @@ public class GridView extends JPanel implements Observer{
 	protected int widthPadding;
 	protected int heightPadding;
 	private boolean displayGrid = false;
+	private boolean cellSizeAuto = false;
 
 	public GridView(Grid grid, Parameters parameters) {
 		this.grid = grid;
 		displayGrid = parameters.isDisplayGrid();
+		cellSize = parameters.getCellSize();
+		cellSizeAuto = (parameters.getCellSize() == 0);
 	}
 
 	@Override
@@ -42,12 +45,15 @@ public class GridView extends JPanel implements Observer{
 
 		// Clear the screen.
 		g.setColor(Color.WHITE);
-		g.drawRect(0, 0, this.getWidth(), this.getHeight());
+		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-		// Get the correct size based on the grid size and the frame size.
-		cellSize = getCorrectSize() / ((grid.getWidth() > grid.getHeight()) ? grid.getWidth() : grid.getHeight());
-		widthPadding = (this.getWidth() - grid.getWidth() * cellSize) / 2;
-		heightPadding = (this.getHeight() - grid.getHeight() * cellSize) / 2;
+		if(cellSizeAuto){
+			// Get the correct size based on the grid size and the frame size.
+			cellSize = getCorrectSize() / ((grid.getWidth() > grid.getHeight()) ? grid.getWidth() : grid.getHeight());
+
+			widthPadding = (this.getWidth() - grid.getWidth() * cellSize) / 2;
+			heightPadding = (this.getHeight() - grid.getHeight() * cellSize) / 2;
+		}
 
 		for (int i = 0; i < grid.getHeight(); i++) {
 			for (int j = 0; j < grid.getWidth(); j++) {
@@ -57,22 +63,17 @@ public class GridView extends JPanel implements Observer{
 				if(agent != null){
 					g.setColor(agent.getColor());
 					g.fill3DRect(j * cellSize + widthPadding, i * cellSize + heightPadding, cellSize, cellSize, true);
-
 				}
-			}
-		}
 
-		if(displayGrid){
-			g.setColor(Color.BLACK);
-			for (int i = 0; i <= grid.getHeight(); i++) {
-				g.drawLine(widthPadding, i * cellSize, this.getWidth() - widthPadding, i * cellSize);
-			}
-			for (int j = 0; j <= grid.getWidth(); j++) {
-				g.drawLine(j * cellSize + widthPadding, heightPadding, j * cellSize + widthPadding, this.getHeight() - heightPadding);
+				if(displayGrid){
+					g.setColor(Color.BLACK);
+					g.drawRect(j * cellSize + widthPadding, i * cellSize + heightPadding, cellSize, cellSize);
+				}
+
 			}
 		}
 	}
-	
+
 	private int getCorrectSize() {
 		return this.getWidth() > this.getHeight() ? this.getHeight() : this.getWidth();
 	}

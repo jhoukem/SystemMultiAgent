@@ -9,13 +9,6 @@ public class Logger {
 	private static PrintWriter writer;
 
 
-	static{
-		try {
-			writer = new PrintWriter("log.csv", "UTF-8");
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-	}
 
 	private Logger(){}
 
@@ -30,6 +23,14 @@ public class Logger {
 	public static void log(String text){
 		writer.println(text);
 		writer.flush();
+	}
+
+	public static void initialize(String logFile) {
+		try {
+			writer = new PrintWriter(logFile, "UTF-8");
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 
 
