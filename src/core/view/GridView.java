@@ -1,4 +1,4 @@
-package view;
+package core.view;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,9 +8,9 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
-import model.Agent;
-import model.Grid;
-import utils.Parameters;
+import core.model.Agent;
+import core.model.Environment;
+import core.utils.Parameters;
 
 public class GridView extends JPanel implements Observer{
 
@@ -20,7 +20,7 @@ public class GridView extends JPanel implements Observer{
 	private static final long serialVersionUID = 7811268030703839096L;
 
 	// The grid to watch.
-	protected Grid grid;
+	protected Environment grid;
 	// The size of a cell in pixel.
 	protected int cellSize;
 	protected int widthPadding;
@@ -28,7 +28,7 @@ public class GridView extends JPanel implements Observer{
 	private boolean displayGrid = false;
 	private boolean cellSizeAuto = false;
 
-	public GridView(Grid grid, Parameters parameters) {
+	public GridView(Environment grid, Parameters parameters) {
 		this.grid = grid;
 		displayGrid = parameters.isDisplayGrid();
 		cellSize = parameters.getCellSize();
@@ -58,7 +58,7 @@ public class GridView extends JPanel implements Observer{
 		for (int i = 0; i < grid.getHeight(); i++) {
 			for (int j = 0; j < grid.getWidth(); j++) {
 
-				Agent agent = grid.getAgentToPos(j, i);
+				Agent agent = grid.getCell(j, i).getAgent();
 
 				if(agent != null){
 					g.setColor(agent.getColor());

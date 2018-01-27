@@ -1,8 +1,8 @@
-package scheduler;
+package core.scheduler;
 
 import java.util.List;
 
-import model.Agent;
+import core.model.Agent;
 
 public class SequentialScheduler implements Scheduler{
 

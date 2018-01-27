@@ -1,9 +1,9 @@
-package scheduler;
+package core.scheduler;
 
 import java.util.List;
 
-import model.Agent;
-import model.SMA;
+import core.model.Agent;
+import core.model.SMA;
 
 public class RandomScheduler implements Scheduler{
 

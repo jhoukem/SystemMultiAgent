@@ -2,13 +2,13 @@ package particules;
 
 import java.awt.Color;
 
-import model.Agent;
-import model.Grid;
+import core.model.Agent;
+import core.model.Cell;
+import core.model.Environment;
 
 public class ParticuleAgent extends Agent{
 
-
-	public ParticuleAgent(Grid grid) {
+	public ParticuleAgent(Environment grid) {
 		super(grid);
 	}
 
@@ -17,77 +17,47 @@ public class ParticuleAgent extends Agent{
 
 	@Override
 	public void decide(){
+		
+		Cell destination = environment.getCell(getNextX(), getNextY());
 
-		handleCollision();
-
-		if(canMove()){
-			setPosition(getNextX(), getNextY());
-		}
-	}
-
-	private boolean canMove() {
-		// Next position inbound.
-		if(getNextX() >= 0 && getNextX() < grid.getWidth() && getNextY() >= 0 && getNextY() < grid.getHeight()){
-			// Next position free.
-			if(grid.isEmpty(getNextX(), getNextY())){
-				return true;
+		// Out of bound.
+		if(destination == null) {	
+			color = Color.BLUE;
+			bounce();
+			destination = environment.getCell(getNextX(), getNextY());
+			// Blocked particle.
+			if(destination == null){
+				return;
 			}
-		}
-		return false;
-	}
-
-	private void handleCollision() {
-
-		// Check for grid collision and apply the correct velocity.
-		if(!grid.isTorus()){
-
-			if(getNextX() >= grid.getWidth() || getNextX() < 0){
-				velocityX = -velocityX;
-				color = Color.BLUE;
-				if(isTrace()){
-					logInfos();
-				}
+			if(destination.isEmpty()){
+				setPosition(destination.getX(), destination.getY());
 			}
-
-			if(getNextY() >= grid.getHeight() || getNextY() < 0){
-				velocityY = -velocityY;
-				color = Color.BLUE;
-				if(isTrace()){
-					logInfos();
-				}
-			}
-		}
-
-		if(!grid.isEmpty(getNextX(), getNextY())){
-			Agent collider = grid.getAgentToPos(getNextX(), getNextY());
+		} else if(destination.isEmpty()) {
+			setPosition(destination.getX(), destination.getY());
+		} else {
+			Agent collider = destination.getAgent();
 			swapVelocity(collider);
 			setColor(Color.RED);
 			collider.setColor(color);
-			if(isTrace()){
-				logInfos();
-				collider.logInfos();
-			}
 		}
-
+		
 	}
 
-	public void setPosition(int x2, int y2) {
-		// Remove itself from any previous position.
-		if(grid.getAgentToPos(x, y) == this){
-			grid.setAgentToPos(null, x, y);
+	private void bounce() {
+		if(x == 0 || x == environment.getWidth() - 1){
+			velocityX = -velocityX;
 		}
-		x = x2;
-		y = y2;
-		// Set itself back in the current position.
-		grid.setAgentToPos(this, x, y);
+		if(y == 0 || y == environment.getHeight() - 1){
+			velocityY = -velocityY;
+		}
 	}
 
 	private void swapVelocity(Agent collider) {
 		int colliderVelocityX = collider.getVelocityX();
 		int colliderVelocityY = collider.getVelocityY();
 
-		collider.setVelocityX(this.velocityX);
-		collider.setVelocityY(this.velocityY);
+		collider.setVelocityX(velocityX);
+		collider.setVelocityY(velocityY);
 
 		this.setVelocityX(colliderVelocityX);
 		this.setVelocityY(colliderVelocityY);

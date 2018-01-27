@@ -1,14 +1,14 @@
-package utils;
+package core.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import scheduler.EquitableScheduler;
-import scheduler.RandomScheduler;
-import scheduler.Scheduler;
-import scheduler.SequentialScheduler;
+import core.scheduler.EquitableScheduler;
+import core.scheduler.RandomScheduler;
+import core.scheduler.Scheduler;
+import core.scheduler.SequentialScheduler;
 
 public class Parameters {
 
@@ -23,9 +23,9 @@ public class Parameters {
 	private boolean displayGrid; // Done
 	private boolean trace;
 	private int seed;// Done
-	private int particulesCount;// Done
+	private int agentCount;// Done
 	private String logFile; //Done
-
+	private String simulationType; //Done
 	private Properties properties;
 
 	public Parameters(String paramPath){
@@ -119,20 +119,22 @@ public class Parameters {
 		boolean defaultParticles = false;
 		
 		try{
-			particulesCount = Integer.parseInt(properties.getProperty("particulesCount"));
-			if(particulesCount <= 0){
+			agentCount = Integer.parseInt(properties.getProperty("agentCount"));
+			if(agentCount <= 0){
 				defaultParticles = true;
-			} else if(particulesCount > gridWidth*gridHeight){
+			} else if(agentCount > gridWidth*gridHeight){
 				defaultParticles = true;
-				System.err.println("The number of particule is superior of the number of cell ( "+gridWidth * gridHeight+" agents max)");
+				System.err.println("The number of agents is superior of the number of cell ( "+gridWidth * gridHeight+" agents max)");
 			}
 		} catch(NumberFormatException e){
 			defaultParticles = true;
 			e.printStackTrace();
 		}
 
+		simulationType = properties.getProperty("simulationType");
+		
 		if(defaultParticles){
-			particulesCount = (int) (gridWidth * gridHeight * 0.2f);
+			agentCount = (int) (gridWidth * gridHeight * 0.2f);
 		}
 		
 		
@@ -160,7 +162,7 @@ public class Parameters {
 		scheduler = new EquitableScheduler();
 		ticks = 0;
 		seed = 1;
-		particulesCount = (int) (gridWidth * gridHeight * 0.2f);
+		agentCount = (int) (gridWidth * gridHeight * 0.2f);
 	}
 
 	public String getLogFile() {
@@ -203,8 +205,8 @@ public class Parameters {
 		return seed;
 	}
 
-	public int getParticulesCount() {
-		return particulesCount;
+	public int getAgentCount() {
+		return agentCount;
 	}
 
 	public int getRefreshRate() {
@@ -221,6 +223,10 @@ public class Parameters {
 
 	public int getCellSize() {
 		return cellSize;
+	}
+
+	public String getSimulationType() {
+		return simulationType;
 	}
 
 

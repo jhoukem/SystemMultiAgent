@@ -1,15 +1,17 @@
 package wator;
 
-import model.Agent;
-import model.Grid;
+import core.model.Agent;
+import core.model.Environment;
 
 public abstract class WatorAgent extends Agent{
 
-	private static final int LIFE_TIME_DEFAULT_COUNTER = 15;
 	protected int breedTimeCounter;
 	protected int liveTimeCounter;
 	
-	public WatorAgent(Grid grid) {
+	protected int timeToBreed = 10;
+	protected int timeToLive = 13;
+	
+	public WatorAgent(Environment grid) {
 		super(grid);
 		breedTimeCounter = 0;
 		liveTimeCounter = 0;
@@ -20,10 +22,13 @@ public abstract class WatorAgent extends Agent{
 		breedTimeCounter++;
 		liveTimeCounter++;
 		
-		if(liveTimeCounter % LIFE_TIME_DEFAULT_COUNTER == 0){
-			grid.addAgentToRemove(this);
+		if(liveTimeCounter >= timeToLive){
+			environment.addAgentToRemove(this);
 		}
 	}
 	
+	protected boolean canBreed() {
+		return breedTimeCounter >= timeToBreed;
+	}
 
 }

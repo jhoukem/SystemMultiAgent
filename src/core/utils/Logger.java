@@ -1,4 +1,4 @@
-package utils;
+package core.utils;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;

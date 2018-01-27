@@ -1,13 +1,14 @@
-package scheduler;
+package core.scheduler;
 
 import java.util.Collections;
 import java.util.List;
 
-import model.Agent;
-import model.SMA;
+import core.model.Agent;
+import core.model.SMA;
 
 public class EquitableScheduler implements Scheduler{
 
+	
 	@Override
 	public void schedule(List<Agent> agents) {
 		Collections.shuffle(agents, SMA.rd);

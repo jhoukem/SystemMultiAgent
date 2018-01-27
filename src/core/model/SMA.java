@@ -1,11 +1,13 @@
-package model;
+package core.model;
 
 import java.util.Observable;
 import java.util.Random;
 
-import scheduler.Scheduler;
-import utils.Logger;
-import utils.Parameters;
+import core.scheduler.Scheduler;
+import core.utils.Logger;
+import core.utils.Parameters;
+import particules.ParticuleAgent;
+import wator.PredatorAgent;
 import wator.PreyAgent;
 
 public class SMA extends Observable{
@@ -15,7 +17,7 @@ public class SMA extends Observable{
 	public static Random rd;
 	private Parameters params;
 	private int sleepTime;
-	private Grid grid;
+	private Environment grid;
 	private Scheduler scheduler;
 
 	public SMA() {
@@ -25,30 +27,56 @@ public class SMA extends Observable{
 	}
 
 	private void loadParameters() {
-		
+
 		if(params.getSeed() > -1){
 			rd = new Random(params.getSeed());
 		} else {
 			rd = new Random();
 		}
-		grid = new Grid(params.getGridWidth(), params.getGridHeight());
+		grid = new Environment(params.getGridWidth(), params.getGridHeight());
 		sleepTime = params.getDelay();
 		scheduler = params.getScheduler();
 		grid.setTorique(params.isTorique());
-		
+
 		if(params.isTrace()){
 			Logger.initialize(params.getLogFile());
 		}
 	}
 
-	private void createAgents() {
+	private void createParticlesSimulation(){
 
-		for(int i = 0; i < params.getParticulesCount(); i++){
-			Agent agent = new PreyAgent(grid);
+		for(int i = 0; i < params.getAgentCount(); i++){
+			ParticuleAgent agent = new ParticuleAgent(grid);
+			agent.initializeRandomPositionAndVelocity();
+			grid.add(agent);
+
+		}
+	}
+
+	private void createWatorSimulation(){
+		
+		for(int i = 0; i < params.getAgentCount(); i++){
+			Agent agent;
+
+			if(SMA.rd.nextInt(101) < 70){
+				agent = new PreyAgent(grid);
+			} else {
+				agent = new PredatorAgent(grid);
+			}
 			agent.initializeRandomPositionAndVelocity();
 			agent.setTrace(params.isTrace());
 			grid.add(agent);
 		}
+		
+	}
+
+	private void createAgents() {
+
+		switch(params.getSimulationType()){
+		case "wator": createWatorSimulation(); break;
+		default: createParticlesSimulation(); break;
+		}
+
 	}
 
 	public void run(){
@@ -76,7 +104,7 @@ public class SMA extends Observable{
 		}		
 	}
 
-	public Grid getGrid() {
+	public Environment getGrid() {
 		return grid;
 	}
 

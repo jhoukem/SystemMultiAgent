@@ -1,6 +1,6 @@
-package main;
+package core.main;
 
-import view.SMAFrame;
+import core.view.SMAFrame;
 
 public class Main {
 	

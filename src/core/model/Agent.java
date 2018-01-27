@@ -1,20 +1,20 @@
-package model;
+package core.model;
 
 import java.awt.Color;
 
-import utils.Logger;
+import core.utils.Logger;
 
 public abstract class Agent {
 
 	protected int id;
 	protected int x,y, velocityX, velocityY;
-	protected Grid grid;
+	protected Environment environment;
 	protected Color color;
 	private boolean isTrace;
 
-	public Agent(Grid grid) {
+	public Agent(Environment grid) {
 		this.id = grid.getNextAgentId();
-		this.grid = grid;
+		this.environment = grid;
 		color = Color.WHITE;
 	}
 
@@ -24,11 +24,15 @@ public abstract class Agent {
 	public void initializeRandomPositionAndVelocity() {
 
 		do {
-			x = SMA.rd.nextInt(grid.getWidth());
-			y = SMA.rd.nextInt(grid.getHeight());
-		} while(!grid.isEmpty(x, y));
+			x = SMA.rd.nextInt(environment.getWidth());
+			y = SMA.rd.nextInt(environment.getHeight());
+		} while(!environment.isEmpty(x, y));
 
 		setPosition(x, y);
+		updateRandomDirection();
+	}
+
+	protected void updateRandomDirection() {
 
 		do{
 			// Force the velocity to be != than 0 on at least 1 axis.
@@ -44,46 +48,37 @@ public abstract class Agent {
 	}
 
 	public void setPosition(int x2, int y2) {
+
+		Cell currentCell = environment.getCell(x, y);
+
 		// Remove itself from any previous position.
-		if(grid.getAgentToPos(x, y) == this){
-			grid.setAgentToPos(null, x, y);
+		if(currentCell.getAgent() == this){
+			currentCell.setAgent(null);
 		}
 		x = x2;
 		y = y2;
+
 		// Set itself back in the current position.
-		grid.setAgentToPos(this, x, y);
+		Cell destination = environment.getCell(x, y);
+		destination.setAgent(this);
 	}
 
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
+	}
+	
 	protected int getNextX() {
-		int nextX = x + velocityX;
-
-		if(grid.isTorus()){
-			if(nextX > 0){
-				nextX = nextX % grid.getWidth();
-			} else {
-				nextX = grid.getWidth() - 1;
-			}
-		}
-
-		return nextX;
+		return x + velocityX;
 	}
 
 	protected int getNextY() {
-		
-		
-//		index % max_size + max_size) % max_size ???
-		int nextY = y + velocityY;
-
-		if(grid.isTorus()){
-			if(nextY > 0){
-				nextY = nextY % grid.getHeight();
-			} else {
-				nextY = grid.getHeight() - 1;
-			}
-		}
-		return nextY;
+		return y + velocityY;
 	}
-
+	
 	public int getVelocityX() {
 		return velocityX;
 	}
@@ -115,5 +110,9 @@ public abstract class Agent {
 	public void setTrace(boolean trace) {
 		isTrace = trace;
 	}
-
+	
+	@Override
+	public String toString() {
+		return "Agent n"+id+" ["+x+","+y+"], velX="+velocityX+" velY="+velocityY;
+	}
 }

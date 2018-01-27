@@ -1,12 +1,12 @@
-package view;
+package core.view;
 
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
-import model.SMA;
-import utils.Parameters;
+import core.model.SMA;
+import core.utils.Parameters;
 
 public class SMAFrame extends JFrame{
 
