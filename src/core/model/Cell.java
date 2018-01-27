@@ -16,6 +16,10 @@ public class Cell {
 
 	public void setAgent(Agent agent) {
 		this.agent = agent;
+		if(agent != null){
+			agent.x = x;
+			agent.y = y;
+		}
 	}
 
 	public int getY() {

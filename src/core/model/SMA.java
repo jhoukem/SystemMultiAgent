@@ -58,7 +58,7 @@ public class SMA extends Observable{
 		for(int i = 0; i < params.getAgentCount(); i++){
 			Agent agent;
 
-			if(SMA.rd.nextInt(101) < 70){
+			if(SMA.rd.nextInt(101) < 80){
 				agent = new PreyAgent(grid);
 			} else {
 				agent = new PredatorAgent(grid);

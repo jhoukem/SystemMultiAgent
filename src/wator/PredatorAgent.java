@@ -38,6 +38,11 @@ public class PredatorAgent extends WatorAgent{
 				setPosition(getNextX(), getNextY());
 			}
 		}
+		if(x < 0 || y < 0 || x >= environment.getWidth() || y >= environment.getHeight()){
+			System.out.println(toString());
+			System.out.println(getNextX());
+		} 
+		
 	}
 
 	private void eat(PreyAgent prey) {

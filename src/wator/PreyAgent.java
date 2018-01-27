@@ -12,7 +12,7 @@ public class PreyAgent extends WatorAgent{
 		super(grid);
 		color = Color.YELLOW;
 		timeToLive = 15;
-		timeToBreed = 4;
+		timeToBreed = 5;
 	}
 
 	@Override
@@ -24,7 +24,6 @@ public class PreyAgent extends WatorAgent{
 		updateRandomDirection();
 		Cell destination = environment.getCell(getNextX(), getNextY());
 
-		
 		if(destination != null && destination.isEmpty()) {	
 
 			if(canBreed()){
@@ -36,6 +35,7 @@ public class PreyAgent extends WatorAgent{
 			}
 			setPosition(getNextX(), getNextY());
 		}
+		
 	}
 
 }

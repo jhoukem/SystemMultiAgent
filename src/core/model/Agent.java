@@ -55,11 +55,9 @@ public abstract class Agent {
 		if(currentCell.getAgent() == this){
 			currentCell.setAgent(null);
 		}
-		x = x2;
-		y = y2;
 
 		// Set itself back in the current position.
-		Cell destination = environment.getCell(x, y);
+		Cell destination = environment.getCell(x2, y2);
 		destination.setAgent(this);
 	}
 
