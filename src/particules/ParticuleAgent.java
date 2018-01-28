@@ -8,12 +8,26 @@ import core.model.Environment;
 
 public class ParticuleAgent extends Agent{
 
+	int colorCounter = 0;
+	int colorCounterDelay = 5;
+	
 	public ParticuleAgent(Environment grid) {
 		super(grid);
+		color = Color.GRAY;
 	}
 
 	@Override
-	public void update(){}
+	public void update(){
+		
+		colorCounter++;
+
+		// Set back the default color.
+		if(colorCounter > colorCounterDelay){
+			colorCounter = 0;
+			color = Color.GRAY;
+		}
+		
+	}
 
 	@Override
 	public void decide(){

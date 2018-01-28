@@ -46,6 +46,11 @@ public abstract class Agent {
 		Logger.log("Agent;"+ id +";"+ x +";"+ y +";"+ velocityX +";"+ velocityY);
 
 	}
+	
+	public void invertVeclocity() {
+		velocityX = -velocityX;
+		velocityY = -velocityY;
+	}
 
 	public void setPosition(int x2, int y2) {
 
