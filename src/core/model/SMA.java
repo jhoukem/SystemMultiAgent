@@ -6,6 +6,7 @@ import java.util.Random;
 import core.scheduler.Scheduler;
 import core.utils.Logger;
 import core.utils.Parameters;
+import core.utils.Timer;
 import particules.ParticuleAgent;
 import wator.PredatorAgent;
 import wator.PreyAgent;
@@ -19,9 +20,11 @@ public class SMA extends Observable{
 	private int sleepTime;
 	private Environment grid;
 	private Scheduler scheduler;
+	private Timer timer;
 
 	public SMA() {
 		params = new Parameters(CONFIG_FILE);
+		timer = new Timer();
 		loadParameters();
 		createAgents();
 	}
@@ -54,7 +57,7 @@ public class SMA extends Observable{
 	}
 
 	private void createWatorSimulation(){
-		
+
 		for(int i = 0; i < params.getAgentCount(); i++){
 			Agent agent;
 
@@ -67,7 +70,7 @@ public class SMA extends Observable{
 			agent.setTrace(params.isTrace());
 			grid.add(agent);
 		}
-		
+
 	}
 
 	private void createAgents() {
@@ -80,18 +83,25 @@ public class SMA extends Observable{
 	}
 
 	public void run(){
+
 		while(tick < params.getTicks() || params.getTicks() == 0){
-			if(params.isTrace()){
-				Logger.log("Tick;"+tick);
+
+			timer.updateTimer();
+			if(timer.isTimerOver(params.getDelay())){
+				timer.resetTimer();
+
+				if(params.isTrace()){
+					Logger.log("Tick;"+tick);
+				}
+				if(tick % params.getRefreshRate() == 0){
+					notifyObservers();
+				}
+				sleep(sleepTime);
+				scheduler.schedule(grid.getAgents());
+				grid.removeDeadAgents();
+				grid.addNewAgents();
+				tick++;
 			}
-			if(tick % params.getRefreshRate() == 0){
-				notifyObservers();
-			}
-			sleep(sleepTime);
-			scheduler.schedule(grid.getAgents());
-			grid.removeDeadAgents();
-			grid.addNewAgents();
-			tick++;
 		}
 		Logger.close();
 	}

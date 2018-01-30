@@ -12,7 +12,7 @@ public class PreyAgent extends WatorAgent{
 		super(grid);
 		color = Color.YELLOW;
 		timeToLive = 15;
-		timeToBreed = 6;
+		timeToBreed = 4;
 	}
 
 	@Override

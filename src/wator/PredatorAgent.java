@@ -1,12 +1,16 @@
 package wator;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import core.model.Cell;
 import core.model.Environment;
+import core.model.SMA;
 
 public class PredatorAgent extends WatorAgent{
 
+	ArrayList<PreyAgent> preyAround = new ArrayList<PreyAgent>();
+	
 	public PredatorAgent(Environment grid) {
 		super(grid);
 		color = Color.PINK;
@@ -18,7 +22,7 @@ public class PredatorAgent extends WatorAgent{
 	public void decide() {
 		color = Color.RED;
 
-		PreyAgent prey = getPreyAround();
+		PreyAgent prey = getRandomPreyAround();
 
 		if(prey != null){
 			eat(prey);
@@ -38,11 +42,6 @@ public class PredatorAgent extends WatorAgent{
 				setPosition(getNextX(), getNextY());
 			}
 		}
-		if(x < 0 || y < 0 || x >= environment.getWidth() || y >= environment.getHeight()){
-			System.out.println(toString());
-			System.out.println(getNextX());
-		} 
-		
 	}
 
 	private void eat(PreyAgent prey) {
@@ -52,7 +51,10 @@ public class PredatorAgent extends WatorAgent{
 		liveTimeCounter -= 3;
 	}
 
-	private PreyAgent getPreyAround() {
+	private PreyAgent getRandomPreyAround() {
+
+		// Clear the previous iteration.
+		preyAround.clear();
 
 		for(int i = y-1; i <= y+1; i++){
 			for(int j = x-1; j <= x+1; j++){
@@ -61,10 +63,15 @@ public class PredatorAgent extends WatorAgent{
 				}
 				Cell cell = environment.getCell(j, i);
 				if(cell != null && cell.getAgent() instanceof PreyAgent){
-					return (PreyAgent) cell.getAgent();
+					preyAround.add((PreyAgent) cell.getAgent());
 				}
 			}
 		}
-		return null;
+		
+		if(preyAround.isEmpty()){
+			return null;
+		} else {
+			return preyAround.get(SMA.rd.nextInt(preyAround.size()));
+		}
 	}
 }
