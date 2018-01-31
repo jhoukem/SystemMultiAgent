@@ -17,7 +17,9 @@ public class Logger {
 	}
 
 	public static void close() {
-		writer.close();
+		if(writer != null){
+			writer.close();
+		}
 	}
 	
 	public static void log(String text){

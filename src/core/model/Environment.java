@@ -1,23 +1,50 @@
 package core.model;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Random;
 
-public class Environment {
+import core.utils.Parameters;
 
-	private Cell grid[][];
-	private int agentCounter;
-	private boolean isTorus = false;
-	private List<Agent> agents = new ArrayList<Agent>();
-	private List<Agent> toRemove = new ArrayList<Agent>();
-	private List<Agent> toAdd = new ArrayList<Agent>();
+public abstract class Environment extends Observable{
 
-	public Environment(int width, int height) {
-		agentCounter = 0;
-		initGrid(width, height);
+	protected Cell grid[][];
+	// The number of agent at the start of the simulation.
+	protected int agentCount = 0;
+	// The id of the next agent to be created.
+	protected int agentCounter = 0;
+	protected boolean isTorus = false;
+	// Whether to log infos.
+	protected boolean isTrace = false;
+
+	protected List<Agent> agents = new ArrayList<Agent>();
+	protected List<Agent> toRemove = new ArrayList<Agent>();
+	protected List<Agent> toAdd = new ArrayList<Agent>();
+
+	// Whether the environment is in the scheduling process (can the agents list be modified directly).
+	protected boolean isScheduling = false;
+
+	// The random object used everywhere we need something random.
+	public final Random random;
+
+	public Environment(Parameters parameters) {
+		initGrid(parameters.getGridWidth(), parameters.getGridHeight());
+		
+		if(parameters.getSeed() > -1){
+			random = new Random(parameters.getSeed());
+		} else {
+			random = new Random();
+		}
+		this.isTorus = parameters.isTorus();
+		this.agentCount = parameters.getAgentCount();
 	}
 
-	private void initGrid(int width, int height) {
+	protected abstract void loadAgents();
+
+
+	protected void initGrid(int width, int height) {
 		grid = new Cell[height][width];
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[i].length; j++) {
@@ -27,7 +54,7 @@ public class Environment {
 	}
 
 	public Cell getCell(int x, int y) {
-		
+
 		if(isTorus) {
 			if(x < 0) {
 				x = this.grid[0].length - 1;
@@ -46,7 +73,58 @@ public class Environment {
 		return grid[y][x];
 	}
 
-	public boolean isEmpty(int x, int y){
+	/**
+	 * Add the current agent to the environment agents list. If the environment is currently being
+	 * scheduled, it will be added on the next frame. To avoid any concurrent modification exception.
+	 * 
+	 * @param agent The agent to add to the environment.
+	 */
+	public void add(Agent agent) {
+		if(isScheduling){
+			toAdd.add(agent);
+		} else {
+			agents.add(agent);	
+		}
+	}
+
+	/**
+	 * Remove the current agent from the environment agents list. If the environment is currently being
+	 * scheduled, it will be remove on the next frame. To avoid any concurrent modification exception.
+	 * 
+	 * @param agent The agent to remove from the environment.
+	 */
+	public void remove(Agent agent){
+		if(isScheduling){
+			toRemove.add(agent);
+		} else {
+			agents.remove(agent);	
+		}
+	}
+
+	private void removeDeadAgents() {
+		for(Agent agent : toRemove){
+			Cell cell = getCell(agent.x, agent.y);
+			if(cell.getAgent() == agent){
+				cell.setAgent(null);
+			}
+			agents.remove(agent);
+		}
+		toRemove.clear();
+	}
+
+	private void addNewAgents() {
+		for(Agent agent : toAdd){
+			agents.add(agent);
+		}
+		toAdd.clear();
+	}
+
+	public void processPendingOperations() {
+		removeDeadAgents();
+		addNewAgents();
+	}
+
+	public boolean isCellEmpty(int x, int y){
 		return getCell(x, y).isEmpty();
 	}
 
@@ -70,47 +148,30 @@ public class Environment {
 		return agentCounter++;
 	}
 
-	public void addAgentToRemove(Agent agent) {
-		toRemove.add(agent);
-	}
-
-	public void removeDeadAgents() {
-		for(Agent agent : toRemove){
-			Cell cell = getCell(agent.x, agent.y);
-			if(cell.getAgent() == agent){
-				cell.setAgent(null);
-			}
-			agents.remove(agent);
-		}
-		toRemove.clear();
-	}
-
 	public List<Agent> getAgents() {
 		return agents;
 	}
 
-	public void add(Agent agent) {
-		agents.add(agent);	
-	}
-
-	/**
-	 * Used by agents that can create others agents.
-	 * 
-	 * @param agent
-	 */
-	public void addLater(Agent agent) {
-		toAdd.add(agent);
-	}
-
-	public void addNewAgents() {
-		for(Agent agent : toAdd){
-			agents.add(agent);
-		}
-		toAdd.clear();
-	}
-
-	public boolean isToDelete(Agent agent) {
+	public boolean isPendingForDeletion(Agent agent) {
 		return toRemove.contains(agent);
+	}
+
+	public void setScheduling(boolean isScheduling) {
+		this.isScheduling = isScheduling;
+	}
+
+	public boolean isTrace() {
+		return isTrace;
+	}
+
+	public Color getBackgroundColor() {
+		return Color.DARK_GRAY;
+	}
+	
+	@Override
+	public void notifyObservers() {
+		this.setChanged();
+		super.notifyObservers();
 	}
 
 }

@@ -1,49 +1,51 @@
-package particules;
+package particules.model;
 
 import java.awt.Color;
 
 import core.model.Agent;
 import core.model.Cell;
-import core.model.Environment;
 
 public class ParticuleAgent extends Agent{
 
-	int colorCounter = 0;
-	int colorCounterDelay = 5;
-	
-	public ParticuleAgent(Environment grid) {
-		super(grid);
-		color = Color.GRAY;
+	// The counter for the color to change back to default.
+	private int colorCounter = 0;
+	// The delay (in ticks) before the color is changed back to default).
+	private int colorCounterDelay;
+
+	public ParticuleAgent(ParticulesEnviroment environment) {
+		super(environment);
+		this.colorCounterDelay = environment.getParameters().getColorCounterDelay();
+		setColor(Color.GRAY);
+	}
+
+	@Override
+	public void setColor(Color color) {
+		super.setColor(color);
+		colorCounter = 0;
 	}
 
 	@Override
 	public void update(){
-		
-		colorCounter++;
 
-		// Set back the default color.
-		if(colorCounter > colorCounterDelay){
+		// Check the counter and increment it at the same time and set back the default color if necessary.
+		if(colorCounter++ > colorCounterDelay){
 			colorCounter = 0;
-			color = Color.GRAY;
+			setColor(Color.GRAY);
 		}
-		
 	}
 
 	@Override
 	public void decide(){
-		
+
 		Cell destination = environment.getCell(getNextX(), getNextY());
 
 		// Out of bound.
 		if(destination == null) {	
-			color = Color.BLUE;
+			setColor(Color.BLUE);
 			bounce();
 			destination = environment.getCell(getNextX(), getNextY());
-			// Blocked particle.
-			if(destination == null){
-				return;
-			}
-			if(destination.isEmpty()){
+			// If the particle is not blocked.
+			if(destination != null && destination.isEmpty()){
 				setPosition(destination.getX(), destination.getY());
 			}
 		} else if(destination.isEmpty()) {
@@ -52,9 +54,9 @@ public class ParticuleAgent extends Agent{
 			Agent collider = destination.getAgent();
 			swapVelocity(collider);
 			setColor(Color.RED);
-			collider.setColor(color);
+			collider.setColor(getColor());
 		}
-		
+
 	}
 
 	private void bounce() {

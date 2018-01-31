@@ -6,16 +6,17 @@ import core.utils.Logger;
 
 public abstract class Agent {
 
+	private final static int velocities[] = {-1, 0, 1};
+	
 	protected int id;
 	protected int x,y, velocityX, velocityY;
 	protected Environment environment;
-	protected Color color;
-	private boolean isTrace;
+	private Color color;
 
 	public Agent(Environment grid) {
 		this.id = grid.getNextAgentId();
 		this.environment = grid;
-		color = Color.WHITE;
+		setColor(Color.WHITE);
 	}
 
 	public abstract void update();
@@ -24,9 +25,9 @@ public abstract class Agent {
 	public void initializeRandomPositionAndVelocity() {
 
 		do {
-			x = SMA.rd.nextInt(environment.getWidth());
-			y = SMA.rd.nextInt(environment.getHeight());
-		} while(!environment.isEmpty(x, y));
+			x = environment.random.nextInt(environment.getWidth());
+			y = environment.random.nextInt(environment.getHeight());
+		} while(!environment.isCellEmpty(x, y));
 
 		setPosition(x, y);
 		updateRandomDirection();
@@ -36,8 +37,8 @@ public abstract class Agent {
 
 		do{
 			// Force the velocity to be != than 0 on at least 1 axis.
-			velocityX = SMA.rd.nextBoolean() ? SMA.rd.nextBoolean() ? 1 : 0 : -1;
-			velocityY = SMA.rd.nextBoolean() ? SMA.rd.nextBoolean() ? 1 : 0 : -1;
+			velocityX = velocities[environment.random.nextInt(velocities.length)];
+			velocityY = velocities[environment.random.nextInt(velocities.length)];
 		} while(velocityX == 0 && velocityY == 0);
 
 	}
@@ -52,17 +53,17 @@ public abstract class Agent {
 		velocityY = -velocityY;
 	}
 
-	public void setPosition(int x2, int y2) {
+	public void setPosition(int nextX, int nextY) {
 
-		Cell currentCell = environment.getCell(x, y);
 
 		// Remove itself from any previous position.
+		Cell currentCell = environment.getCell(x, y);
 		if(currentCell.getAgent() == this){
 			currentCell.setAgent(null);
 		}
 
-		// Set itself back in the current position.
-		Cell destination = environment.getCell(x2, y2);
+		// Set itself to the given position.
+		Cell destination = environment.getCell(nextX, nextY);
 		destination.setAgent(this);
 	}
 
@@ -106,14 +107,6 @@ public abstract class Agent {
 		this.color = color;
 	}
 
-	public boolean isTrace(){
-		return isTrace;
-	}
-
-	public void setTrace(boolean trace) {
-		isTrace = trace;
-	}
-	
 	@Override
 	public String toString() {
 		return "Agent n"+id+" ["+x+","+y+"], velX="+velocityX+" velY="+velocityY;

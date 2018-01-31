@@ -12,26 +12,25 @@ import core.scheduler.SequentialScheduler;
 
 public class Parameters {
 
-	private boolean isTorique;// Done
-	private int width, height; // Done
-	private int cellSize; // Done
-	private int gridWidth, gridHeight;// Done
-	private int delay;// Done
-	private int refreshRate;// Done
-	private Scheduler scheduler;// Done
-	private int ticks;// Done
-	private boolean displayGrid; // Done
-	private boolean trace;
-	private int seed;// Done
-	private int agentCount;// Done
-	private String logFile; //Done
-	private String simulationType; //Done
-	private Properties properties;
+	protected boolean isTorus;// Done
+	protected int width, height; // Done
+	protected int cellSize; // Done
+	protected int gridWidth, gridHeight;// Done
+	protected int delay;// Done
+	protected int refreshRate;// Done
+	protected Scheduler scheduler;// Done
+	protected int ticks;// Done
+	protected boolean displayGrid; // Done
+	protected boolean trace;
+	protected int seed;// Done
+	protected int agentCount;// Done
+	protected String logFile; //Done
+	protected Properties properties;
 
 	public Parameters(String paramPath){
 		properties = new Properties();
 		try {
-			properties.load(new FileInputStream(new File("src/"+paramPath)));
+			properties.load(new FileInputStream(new File("src/"+paramPath+".properties")));
 			setParams();
 		} catch (IOException e) {
 			setDefaultParams();
@@ -40,8 +39,8 @@ public class Parameters {
 
 	}
 
-	private void setParams() {
-		isTorique = Boolean.parseBoolean(properties.getProperty("isTorus"));
+	protected void setParams() {
+		isTorus = Boolean.parseBoolean(properties.getProperty("isTorus"));
 		displayGrid = Boolean.parseBoolean(properties.getProperty("displayGrid"));
 		trace = Boolean.parseBoolean(properties.getProperty("trace"));
 		logFile = properties.getProperty("logFile");
@@ -116,29 +115,25 @@ public class Parameters {
 			seed = 1;
 		}
 
-		boolean defaultParticles = false;
+		boolean defaultAgentCount = false;
 		
 		try{
 			agentCount = Integer.parseInt(properties.getProperty("agentCount"));
 			if(agentCount <= 0){
-				defaultParticles = true;
+				defaultAgentCount = true;
 			} else if(agentCount > gridWidth*gridHeight){
-				defaultParticles = true;
+				defaultAgentCount = true;
 				System.err.println("The number of agents is superior of the number of cell ( "+gridWidth * gridHeight+" agents max)");
 			}
 		} catch(NumberFormatException e){
-			defaultParticles = true;
+			defaultAgentCount = true;
 			e.printStackTrace();
 		}
 
-		simulationType = properties.getProperty("simulationType");
-		
-		if(defaultParticles){
+		if(defaultAgentCount){
 			agentCount = (int) (gridWidth * gridHeight * 0.2f);
 		}
 		
-		
-
 		String schedulerType = properties.getProperty("scheduler");
 		if(schedulerType != null){
 
@@ -151,11 +146,10 @@ public class Parameters {
 		} else {
 			scheduler = new EquitableScheduler();
 		}
-
 	}
 
-	private void setDefaultParams() {
-		isTorique = false;
+	protected void setDefaultParams() {
+		isTorus = false;
 		gridWidth = 10;
 		gridHeight = 10;
 		delay = 100;
@@ -169,8 +163,8 @@ public class Parameters {
 		return logFile;
 	}
 	
-	public boolean isTorique() {
-		return isTorique;
+	public boolean isTorus() {
+		return isTorus;
 	}
 
 	public int getGridWidth() {
@@ -189,7 +183,7 @@ public class Parameters {
 		return scheduler;
 	}
 
-	public int getTicks() {
+	public int getTicksToSimulate() {
 		return ticks;
 	}
 
@@ -224,10 +218,5 @@ public class Parameters {
 	public int getCellSize() {
 		return cellSize;
 	}
-
-	public String getSimulationType() {
-		return simulationType;
-	}
-
 
 }

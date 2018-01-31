@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
-import core.model.SMA;
+import core.model.MultiAgentSystem;
 import core.utils.Parameters;
 
 public class SMAFrame extends JFrame{
@@ -15,15 +15,10 @@ public class SMAFrame extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 
+	public SMAFrame(MultiAgentSystem multiAgentSystem,  Parameters params) {
 
-	private SMA sma;
-
-	public SMAFrame() {
-		sma = new SMA();
-		Parameters params = sma.getParameters();
-
-		GridView gridPanel = new GridView(sma.getGrid(), sma.getParameters());
-		sma.addObserver(gridPanel);
+		GridView gridPanel = new GridView(multiAgentSystem, params);
+		multiAgentSystem.getEnvironment().addObserver(gridPanel);
 		gridPanel.setPreferredSize(new Dimension(params.getCellSize() * params.getGridWidth(), params.getCellSize() * params.getGridHeight()));
 		
 		JScrollPane scrollPane = new JScrollPane(gridPanel);
@@ -35,11 +30,5 @@ public class SMAFrame extends JFrame{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
-
-
-	public void run() {
-		sma.run();
-	}
-
 
 }

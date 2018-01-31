@@ -1,14 +1,13 @@
 package core.utils;
 
-public class Timer {
+public class FPSManager {
 
 	// The time the last frame was called. Useful to calculate the current StateTime.
 	private long lastFrame = 0;
 	// The stateTime allow me to trigger some event a certain point in time.
 	private float stateTime = 0;
-
 	
-	public boolean isTimerOver(float time){
+	public boolean canUpdate(float time){
 		return stateTime > time;
 	}
 	
@@ -30,8 +29,12 @@ public class Timer {
 		lastFrame = System.currentTimeMillis();
 		return (float)delta;
 	}
-
+	
 	public float getStateTime() {
 		return stateTime;
+	}
+
+	public int getTimeToSleep(float time) {
+		return Math.max(0, (int)(time - stateTime));
 	}
 }

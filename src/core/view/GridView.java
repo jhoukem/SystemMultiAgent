@@ -3,6 +3,8 @@ package core.view;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -10,9 +12,10 @@ import javax.swing.JPanel;
 
 import core.model.Agent;
 import core.model.Environment;
+import core.model.MultiAgentSystem;
 import core.utils.Parameters;
 
-public class GridView extends JPanel implements Observer{
+public class GridView extends JPanel implements Observer, KeyListener{
 
 	/**
 	 * 
@@ -20,19 +23,23 @@ public class GridView extends JPanel implements Observer{
 	private static final long serialVersionUID = 7811268030703839096L;
 
 	// The grid to watch.
-	protected Environment grid;
+	protected Environment environment;
 	// The size of a cell in pixel.
 	protected int cellSize;
 	protected int widthPadding;
 	protected int heightPadding;
 	private boolean displayGrid = false;
 	private boolean cellSizeAuto = false;
+	private MultiAgentSystem multiAgentSystem;
 
-	public GridView(Environment grid, Parameters parameters) {
-		this.grid = grid;
+	public GridView(MultiAgentSystem multiAgentSystem, Parameters parameters) {
+		this.multiAgentSystem = multiAgentSystem;
+		environment = multiAgentSystem.getEnvironment();
 		displayGrid = parameters.isDisplayGrid();
 		cellSize = parameters.getCellSize();
 		cellSizeAuto = (parameters.getCellSize() == 0);
+		this.addKeyListener(this);
+		this.setFocusable(true);
 	}
 
 	@Override
@@ -49,20 +56,23 @@ public class GridView extends JPanel implements Observer{
 
 		if(cellSizeAuto){
 			// Get the correct size based on the grid size and the frame size.
-			cellSize = getCorrectSize() / ((grid.getWidth() > grid.getHeight()) ? grid.getWidth() : grid.getHeight());
+			cellSize = getCorrectSize() / ((environment.getWidth() > environment.getHeight()) ? environment.getWidth() : environment.getHeight());
 
-			widthPadding = (this.getWidth() - grid.getWidth() * cellSize) / 2;
-			heightPadding = (this.getHeight() - grid.getHeight() * cellSize) / 2;
+			widthPadding = (this.getWidth() - environment.getWidth() * cellSize) / 2;
+			heightPadding = (this.getHeight() - environment.getHeight() * cellSize) / 2;
 		}
 
-		for (int i = 0; i < grid.getHeight(); i++) {
-			for (int j = 0; j < grid.getWidth(); j++) {
+		for (int i = 0; i < environment.getHeight(); i++) {
+			for (int j = 0; j < environment.getWidth(); j++) {
 
-				Agent agent = grid.getCell(j, i).getAgent();
+				Agent agent = environment.getCell(j, i).getAgent();
 
 				if(agent != null){
 					g.setColor(agent.getColor());
 					g.fill3DRect(j * cellSize + widthPadding, i * cellSize + heightPadding, cellSize, cellSize, true);
+				} else {
+					g.setColor(environment.getBackgroundColor());
+					g.fillRect(j * cellSize + widthPadding, i * cellSize + heightPadding, cellSize, cellSize);
 				}
 
 				if(displayGrid){
@@ -79,9 +89,9 @@ public class GridView extends JPanel implements Observer{
 	}
 
 	public void displayAscii() {
-		for(int i = 0; i < grid.getHeight(); i++){
-			for(int j = 0; j < grid.getWidth(); j++){
-				if(!grid.isEmpty(j, i)){
+		for(int i = 0; i < environment.getHeight(); i++){
+			for(int j = 0; j < environment.getWidth(); j++){
+				if(!environment.isCellEmpty(j, i)){
 					System.out.print("O");
 				} else {
 					System.out.print(".");
@@ -97,5 +107,25 @@ public class GridView extends JPanel implements Observer{
 		this.repaint();
 		Toolkit.getDefaultToolkit().sync();
 	}
+
+	@Override
+	public void keyPressed(KeyEvent key) {}
+
+	@Override
+	public void keyReleased(KeyEvent key) {
+		
+		switch(key.getKeyCode()){
+		case KeyEvent.VK_SPACE: multiAgentSystem.pause(); break;
+		case KeyEvent.VK_RIGHT: 
+			if(multiAgentSystem.isPaused()){
+				multiAgentSystem.simulateTick();
+			}
+			break;
+		}
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {}
 
 }
