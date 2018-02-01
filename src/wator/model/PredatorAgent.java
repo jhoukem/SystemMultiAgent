@@ -32,29 +32,31 @@ public class PredatorAgent extends WatorAgent{
 		// Remove the predator if it is starving.
 		if(starvingTime <= 0){
 			environment.remove(this);
+			environment.getCell(x, y).setAgent(null);
 		}
 	}
 
 	@Override
 	public void decide() {
 
+		if(environment.getCell(x, y).getAgent() != this){
+			System.err.println("Error: the current cell is the grid does not correspond to this agent"+this);
+		}
+		
 		PreyAgent prey = getRandomPreyAround();
 
 		if(prey != null){
-			if(canBreed()){
-				breedOnCurrentPosition();
-			}
+
+			int lastX = x;
+			int lastY = y;
+
 			eat(prey);
-		} else {
-			updateRandomDirection();
-			Cell destination = environment.getCell(getNextX(), getNextY());
-			if(destination != null && destination.isEmpty()) {
-				if(canBreed()){
-					breedOnCurrentPosition();
-				}
-				// Move to the next position.
-				setPosition(destination.getX(), destination.getY());
+
+			if(canBreed()){
+				breedOnPosition(lastX, lastY);
 			}
+		} else {
+			tryToMoveRandomly();
 		}
 	}
 
@@ -64,12 +66,16 @@ public class PredatorAgent extends WatorAgent{
 	}
 
 	private void eat(PreyAgent prey) {
-		environment.remove(prey);
-		setPosition(prey.getX(), prey.getY());
 
+		// Remove the prey from the simulation.
+		environment.remove(prey);
+		environment.getCell(prey.getX(), prey.getY()).setAgent(null);
+
+		// Move to the last prey position.
+		moveToPosition(prey.getX(), prey.getY());
 		// Stay alive longer.
 		starvingTime = starvingTimeDefault;
-//		timeToLive += 3;
+		//		timeToLive += 3;
 	}
 
 	private PreyAgent getRandomPreyAround() {
@@ -93,6 +99,11 @@ public class PredatorAgent extends WatorAgent{
 		} else {
 			return preyAround.get(environment.random.nextInt(preyAround.size()));
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Predator"+super.toString();
 	}
 
 }

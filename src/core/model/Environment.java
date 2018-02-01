@@ -20,8 +20,8 @@ public abstract class Environment extends Observable{
 	protected boolean isTrace = false;
 
 	protected List<Agent> agents = new ArrayList<Agent>();
-	protected List<Agent> toRemove = new ArrayList<Agent>();
-	protected List<Agent> toAdd = new ArrayList<Agent>();
+	protected List<Agent> removePending = new ArrayList<Agent>();
+	protected List<Agent> addPending = new ArrayList<Agent>();
 
 	// Whether the environment is in the scheduling process (can the agents list be modified directly).
 	protected boolean isScheduling = false;
@@ -81,7 +81,7 @@ public abstract class Environment extends Observable{
 	 */
 	public void add(Agent agent) {
 		if(isScheduling){
-			toAdd.add(agent);
+			addPending.add(agent);
 		} else {
 			agents.add(agent);	
 		}
@@ -95,33 +95,29 @@ public abstract class Environment extends Observable{
 	 */
 	public void remove(Agent agent){
 		if(isScheduling){
-			toRemove.add(agent);
+			removePending.add(agent);
 		} else {
 			agents.remove(agent);	
 		}
 	}
 
 	private void removeDeadAgents() {
-		for(Agent agent : toRemove){
-			Cell cell = getCell(agent.x, agent.y);
-			if(cell.getAgent() == agent){
-				cell.setAgent(null);
-			}
+		for(Agent agent : removePending){
 			agents.remove(agent);
 		}
-		toRemove.clear();
+		removePending.clear();
 	}
 
 	private void addNewAgents() {
-		for(Agent agent : toAdd){
+		for(Agent agent : addPending){
 			agents.add(agent);
 		}
-		toAdd.clear();
+		addPending.clear();
 	}
 
 	public void processPendingOperations() {
-		removeDeadAgents();
 		addNewAgents();
+		removeDeadAgents();
 	}
 
 	public boolean isCellEmpty(int x, int y){
@@ -153,7 +149,7 @@ public abstract class Environment extends Observable{
 	}
 
 	public boolean isPendingForDeletion(Agent agent) {
-		return toRemove.contains(agent);
+		return removePending.contains(agent);
 	}
 
 	public void setScheduling(boolean isScheduling) {

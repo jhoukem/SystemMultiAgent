@@ -7,8 +7,8 @@ import core.utils.Logger;
 public abstract class Agent {
 
 	private final static int velocities[] = {-1, 0, 1};
-	
-	protected int id;
+
+	public final int id;
 	protected int x,y, velocityX, velocityY;
 	protected Environment environment;
 	private Color color;
@@ -29,7 +29,7 @@ public abstract class Agent {
 			y = environment.random.nextInt(environment.getHeight());
 		} while(!environment.isCellEmpty(x, y));
 
-		setPosition(x, y);
+		initPosition(x, y);
 		updateRandomDirection();
 	}
 
@@ -47,34 +47,52 @@ public abstract class Agent {
 		Logger.log("Agent;"+ id +";"+ x +";"+ y +";"+ velocityX +";"+ velocityY);
 
 	}
-	
+
 	public void invertVeclocity() {
 		velocityX = -velocityX;
 		velocityY = -velocityY;
 	}
 
-	public void setPosition(int nextX, int nextY) {
+	public void initPosition(int nextX, int nextY) {
+
+		// Set itself to the given position.
+		Cell destination = environment.getCell(nextX, nextY);
+		if(destination.getAgent() != null){
+			System.err.println("Error: initial destination is not empty:\n"+destination.getAgent());
+			System.exit(-1);
+		}
+		destination.setAgent(this);
+	}
+
+	public void moveToPosition(int nextX, int nextY) {
 
 
 		// Remove itself from any previous position.
 		Cell currentCell = environment.getCell(x, y);
-		if(currentCell.getAgent() == this){
-			currentCell.setAgent(null);
+		if(currentCell.getAgent() != this){
+			System.err.println("Error: the currentCell is not occupied by the correct agent:\n"+this);
+			System.err.println("other agent:\n"+currentCell.getAgent());
+			System.exit(-1);
 		}
+		currentCell.setAgent(null);
 
 		// Set itself to the given position.
 		Cell destination = environment.getCell(nextX, nextY);
+		if(destination.getAgent() != null){
+			System.err.println("Error: the destination is not empty:\n"+destination.getAgent());
+			System.exit(-1);
+		}
 		destination.setAgent(this);
 	}
 
 	public int getX() {
 		return x;
 	}
-	
+
 	public int getY() {
 		return y;
 	}
-	
+
 	protected int getNextX() {
 		return x + velocityX;
 	}
@@ -82,7 +100,7 @@ public abstract class Agent {
 	protected int getNextY() {
 		return y + velocityY;
 	}
-	
+
 	public int getVelocityX() {
 		return velocityX;
 	}

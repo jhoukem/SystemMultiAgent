@@ -2,7 +2,7 @@ package core.model;
 
 public class Cell {
 
-	private int x,y;
+	private final int x,y;
 	private Agent agent;
 
 	public Cell(int x, int y) {
@@ -15,10 +15,11 @@ public class Cell {
 	}
 
 	public void setAgent(Agent agent) {
+		
 		this.agent = agent;
 		if(agent != null){
-			agent.x = x;
-			agent.y = y;
+			agent.x = this.x;
+			agent.y = this.y;
 		}
 	}
 

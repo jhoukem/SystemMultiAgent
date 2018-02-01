@@ -14,7 +14,6 @@ public class WatorSimulationLauncher {
 			return;
 		}
 		
-		
 		WatorParameters parameters = new WatorParameters(args[0]);
 		WatorEnvironment environment = new WatorEnvironment(parameters);
 		

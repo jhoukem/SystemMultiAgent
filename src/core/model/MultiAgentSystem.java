@@ -23,7 +23,7 @@ public class MultiAgentSystem {
 	// The scheduling system.
 	private Scheduler scheduler;
 	// Whether the simulation is paused.
-	private boolean paused = false;
+	private boolean paused = true;
 
 	public MultiAgentSystem(Environment enviroment, Parameters param) {
 		this.environment = enviroment;
@@ -60,6 +60,9 @@ public class MultiAgentSystem {
 				} else {
 					sleep(fpsManager.getTimeToSleep(sleepTime));
 				}
+			} else {
+				// To allow the paused boolean to be reconsidered.
+				sleep(50);
 			}
 		}
 		Logger.close();

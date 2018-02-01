@@ -109,11 +109,7 @@ public class GridView extends JPanel implements Observer, KeyListener{
 	}
 
 	@Override
-	public void keyPressed(KeyEvent key) {}
-
-	@Override
-	public void keyReleased(KeyEvent key) {
-		
+	public void keyPressed(KeyEvent key) {
 		switch(key.getKeyCode()){
 		case KeyEvent.VK_SPACE: multiAgentSystem.pause(); break;
 		case KeyEvent.VK_RIGHT: 
@@ -122,8 +118,10 @@ public class GridView extends JPanel implements Observer, KeyListener{
 			}
 			break;
 		}
-		
 	}
+
+	@Override
+	public void keyReleased(KeyEvent key) {}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {}

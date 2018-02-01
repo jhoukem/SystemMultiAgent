@@ -37,6 +37,10 @@ public class ParticuleAgent extends Agent{
 	@Override
 	public void decide(){
 
+		if(environment.getCell(x, y).getAgent() != this){
+			System.err.println("Collision:");
+		}
+		
 		Cell destination = environment.getCell(getNextX(), getNextY());
 
 		// Out of bound.
@@ -46,10 +50,10 @@ public class ParticuleAgent extends Agent{
 			destination = environment.getCell(getNextX(), getNextY());
 			// If the particle is not blocked.
 			if(destination != null && destination.isEmpty()){
-				setPosition(destination.getX(), destination.getY());
+				moveToPosition(destination.getX(), destination.getY());
 			}
 		} else if(destination.isEmpty()) {
-			setPosition(destination.getX(), destination.getY());
+			moveToPosition(destination.getX(), destination.getY());
 		} else {
 			Agent collider = destination.getAgent();
 			swapVelocity(collider);

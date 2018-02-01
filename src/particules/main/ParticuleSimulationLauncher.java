@@ -14,7 +14,6 @@ public class ParticuleSimulationLauncher {
 			return;
 		}
 		
-		
 		ParticulesParameters parameters = new ParticulesParameters(args[0]);
 		ParticulesEnviroment environment = new ParticulesEnviroment(parameters);
 		

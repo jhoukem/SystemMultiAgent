@@ -2,10 +2,7 @@ package wator.model;
 
 import java.awt.Color;
 
-import core.model.Cell;
-
 public class PreyAgent extends WatorAgent{
-
 
 	public PreyAgent(WatorEnvironment environment) {
 		super(environment);
@@ -17,6 +14,11 @@ public class PreyAgent extends WatorAgent{
 
 	@Override
 	public void update() {
+		// Should not be updated if its pending for deletion.
+		if(environment.isPendingForDeletion(this)){
+			return;
+		}
+
 		// After the first update the prey is now mature.
 		setColor(Color.GREEN);
 		super.update();
@@ -29,20 +31,12 @@ public class PreyAgent extends WatorAgent{
 		if(environment.isPendingForDeletion(this)){
 			return;
 		}
-		
+
 		if(environment.getCell(x, y).getAgent() != this){
+			System.err.println("Error: the current cell is the grid does not correspond to this agent"+this);
 		}
 
-		updateRandomDirection();
-		Cell destination = environment.getCell(getNextX(), getNextY());
-
-		if(destination != null && destination.isEmpty()) {	
-			if(canBreed()){
-				breedOnCurrentPosition();
-			}
-			// Move to the next position.
-			setPosition(destination.getX(), destination.getY());
-		}
+		tryToMoveRandomly();
 	}
 
 	@Override
@@ -50,4 +44,8 @@ public class PreyAgent extends WatorAgent{
 		return new PreyAgent((WatorEnvironment) environment);
 	}
 
+	@Override
+	public String toString() {
+		return "Prey"+super.toString()+" timeToLive="+timeToLive;
+	}
 }
