@@ -62,7 +62,7 @@ public class PredatorAgent extends WatorAgent{
 
 	@Override
 	protected WatorAgent getBreedAgent() {
-		return new PredatorAgent((WatorEnvironment)environment);
+		return new PredatorAgent(environment);
 	}
 
 	private void eat(PreyAgent prey) {

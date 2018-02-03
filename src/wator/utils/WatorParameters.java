@@ -86,6 +86,7 @@ public class WatorParameters extends Parameters {
 		return predatorStarvingTime;
 	}
 
+	@Override
 	protected void setDefaultParams() {
 		super.setDefaultParams();
 		preyLivingTime = 15;

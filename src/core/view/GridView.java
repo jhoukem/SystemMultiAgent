@@ -65,11 +65,11 @@ public class GridView extends JPanel implements Observer, KeyListener{
 		for (int i = 0; i < environment.getHeight(); i++) {
 			for (int j = 0; j < environment.getWidth(); j++) {
 
-				Agent agent = environment.getCell(j, i).getAgent();
+				Agent<?> agent = environment.getCell(j, i).getAgent();
 
 				if(agent != null){
 					g.setColor(agent.getColor());
-					g.fill3DRect(j * cellSize + widthPadding, i * cellSize + heightPadding, cellSize, cellSize, true);
+					g.fillRect(j * cellSize + widthPadding, i * cellSize + heightPadding, cellSize, cellSize);
 				} else {
 					g.setColor(environment.getBackgroundColor());
 					g.fillRect(j * cellSize + widthPadding, i * cellSize + heightPadding, cellSize, cellSize);

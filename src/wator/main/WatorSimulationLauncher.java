@@ -17,8 +17,8 @@ public class WatorSimulationLauncher {
 		WatorParameters parameters = new WatorParameters(args[0]);
 		WatorEnvironment environment = new WatorEnvironment(parameters);
 		
-		MultiAgentSystem sma = new MultiAgentSystem(environment, parameters);
-		new SMAFrame(sma, parameters);
-		sma.run();
+		MultiAgentSystem multiAgentSimulation = new MultiAgentSystem(environment, parameters);
+		new SMAFrame(multiAgentSimulation, parameters);
+		multiAgentSimulation.run();
 	}
 }

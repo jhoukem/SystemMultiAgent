@@ -12,7 +12,7 @@ public class RandomScheduler implements Scheduler{
 	@Override
 	public void schedule(Environment environment) {
 
-		List<Agent> agents = environment.getAgents();
+		List<Agent<?>> agents = environment.getAgents();
 		Collections.shuffle(agents, environment.random);
 		environment.setScheduling(true);
 		for(int i = 0; i < agents.size(); i++){

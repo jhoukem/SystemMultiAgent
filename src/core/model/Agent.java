@@ -4,18 +4,18 @@ import java.awt.Color;
 
 import core.utils.Logger;
 
-public abstract class Agent {
+public abstract class Agent <E extends Environment>{
 
 	private final static int velocities[] = {-1, 0, 1};
 
 	public final int id;
 	protected int x,y, velocityX, velocityY;
-	protected Environment environment;
+	protected E environment;
 	private Color color;
 
-	public Agent(Environment grid) {
-		this.id = grid.getNextAgentId();
-		this.environment = grid;
+	public Agent(E environment) {
+		this.id = environment.getNextAgentId();
+		this.environment = environment;
 		setColor(Color.WHITE);
 	}
 
@@ -117,6 +117,11 @@ public abstract class Agent {
 		this.velocityY = velocityY;
 	}
 
+	public void setVelocity(int velocityX, int velocityY) {
+		this.velocityX = velocityX;
+		this.velocityY = velocityY;
+	}
+	
 	public Color getColor() {
 		return color;
 	}

@@ -3,18 +3,18 @@ package core.model;
 public class Cell {
 
 	private final int x,y;
-	private Agent agent;
+	private Agent<?> agent;
 
 	public Cell(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
-	public Agent getAgent() {
+	public Agent<?> getAgent() {
 		return agent;
 	}
 
-	public void setAgent(Agent agent) {
+	public void setAgent(Agent<?> agent) {
 		
 		this.agent = agent;
 		if(agent != null){

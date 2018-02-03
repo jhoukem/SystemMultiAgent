@@ -17,8 +17,8 @@ public class ParticuleSimulationLauncher {
 		ParticulesParameters parameters = new ParticulesParameters(args[0]);
 		ParticulesEnviroment environment = new ParticulesEnviroment(parameters);
 		
-		MultiAgentSystem sma = new MultiAgentSystem(environment, parameters);
-		new SMAFrame(sma, parameters);
-		sma.run();
+		MultiAgentSystem multiAgentSystem = new MultiAgentSystem(environment, parameters);
+		new SMAFrame(multiAgentSystem, parameters);
+		multiAgentSystem.run();
 	}
 }

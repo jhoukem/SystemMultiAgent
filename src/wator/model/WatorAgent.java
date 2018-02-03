@@ -3,7 +3,7 @@ package wator.model;
 import core.model.Agent;
 import core.model.Cell;
 
-public abstract class WatorAgent extends Agent{
+public abstract class WatorAgent extends Agent<WatorEnvironment> {
 
 	protected int timeToBreed;
 	protected int timeToLive;

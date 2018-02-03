@@ -19,9 +19,9 @@ public abstract class Environment extends Observable{
 	// Whether to log infos.
 	protected boolean isTrace = false;
 
-	protected List<Agent> agents = new ArrayList<Agent>();
-	protected List<Agent> removePending = new ArrayList<Agent>();
-	protected List<Agent> addPending = new ArrayList<Agent>();
+	protected List<Agent<?>> agents = new ArrayList<Agent<?>>();
+	protected List<Agent<?>> removePending = new ArrayList<Agent<?>>();
+	protected List<Agent<?>> addPending = new ArrayList<Agent<?>>();
 
 	// Whether the environment is in the scheduling process (can the agents list be modified directly).
 	protected boolean isScheduling = false;
@@ -79,7 +79,7 @@ public abstract class Environment extends Observable{
 	 * 
 	 * @param agent The agent to add to the environment.
 	 */
-	public void add(Agent agent) {
+	public void add(Agent<?> agent) {
 		if(isScheduling){
 			addPending.add(agent);
 		} else {
@@ -93,7 +93,7 @@ public abstract class Environment extends Observable{
 	 * 
 	 * @param agent The agent to remove from the environment.
 	 */
-	public void remove(Agent agent){
+	public void remove(Agent<?> agent){
 		if(isScheduling){
 			removePending.add(agent);
 		} else {
@@ -102,14 +102,14 @@ public abstract class Environment extends Observable{
 	}
 
 	private void removeDeadAgents() {
-		for(Agent agent : removePending){
+		for(Agent<?> agent : removePending){
 			agents.remove(agent);
 		}
 		removePending.clear();
 	}
 
 	private void addNewAgents() {
-		for(Agent agent : addPending){
+		for(Agent<?> agent : addPending){
 			agents.add(agent);
 		}
 		addPending.clear();
@@ -144,11 +144,11 @@ public abstract class Environment extends Observable{
 		return agentCounter++;
 	}
 
-	public List<Agent> getAgents() {
+	public List<Agent<?>> getAgents() {
 		return agents;
 	}
 
-	public boolean isPendingForDeletion(Agent agent) {
+	public boolean isPendingForDeletion(Agent<?> agent) {
 		return removePending.contains(agent);
 	}
 

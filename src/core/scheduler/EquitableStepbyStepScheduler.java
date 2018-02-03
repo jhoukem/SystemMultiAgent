@@ -14,11 +14,11 @@ public class EquitableStepbyStepScheduler implements Scheduler{
 
 	@Override
 	public void schedule(Environment environment) {
-		List<Agent> agents = environment.getAgents();
+		List<Agent<?>> agents = environment.getAgents();
 		Collections.shuffle(agents, environment.random);
 		environment.setScheduling(true);
 		System.out.println("start");
-		for(Agent agent : agents){
+		for(Agent<?> agent : agents){
 			if(agent instanceof PreyAgent){
 				agent.setColor(Color.GRAY);
 			} else {

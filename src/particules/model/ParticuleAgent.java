@@ -5,7 +5,7 @@ import java.awt.Color;
 import core.model.Agent;
 import core.model.Cell;
 
-public class ParticuleAgent extends Agent{
+public class ParticuleAgent extends Agent<ParticulesEnviroment>{
 
 	// The counter for the color to change back to default.
 	private int colorCounter = 0;
@@ -55,7 +55,7 @@ public class ParticuleAgent extends Agent{
 		} else if(destination.isEmpty()) {
 			moveToPosition(destination.getX(), destination.getY());
 		} else {
-			Agent collider = destination.getAgent();
+			Agent<?> collider = destination.getAgent();
 			swapVelocity(collider);
 			setColor(Color.RED);
 			collider.setColor(getColor());
@@ -72,7 +72,7 @@ public class ParticuleAgent extends Agent{
 		}
 	}
 
-	private void swapVelocity(Agent collider) {
+	private void swapVelocity(Agent<?> collider) {
 		int colliderVelocityX = collider.getVelocityX();
 		int colliderVelocityY = collider.getVelocityY();
 

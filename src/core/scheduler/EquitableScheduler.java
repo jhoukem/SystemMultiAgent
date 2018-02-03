@@ -11,10 +11,10 @@ public class EquitableScheduler implements Scheduler{
 	@Override
 	public void schedule(Environment environment) {
 		
-		List<Agent> agents = environment.getAgents();
+		List<Agent<?>> agents = environment.getAgents();
 		Collections.shuffle(agents, environment.random);
 		environment.setScheduling(true);
-		for(Agent agent : agents){
+		for(Agent<?> agent : agents){
 			agent.decide();
 			agent.update();
 		}

@@ -2,7 +2,7 @@ package wator.model;
 
 import java.awt.Color;
 
-public class PreyAgent extends WatorAgent{
+public class PreyAgent extends WatorAgent {
 
 	public PreyAgent(WatorEnvironment environment) {
 		super(environment);
@@ -41,7 +41,7 @@ public class PreyAgent extends WatorAgent{
 
 	@Override
 	protected WatorAgent getBreedAgent() {
-		return new PreyAgent((WatorEnvironment) environment);
+		return new PreyAgent(environment);
 	}
 
 	@Override
