@@ -30,7 +30,7 @@ public class GridView extends JPanel implements Observer, KeyListener{
 	protected int heightPadding;
 	private boolean displayGrid = false;
 	private boolean cellSizeAuto = false;
-	private MultiAgentSystem multiAgentSystem;
+	protected MultiAgentSystem multiAgentSystem;
 
 	public GridView(MultiAgentSystem multiAgentSystem, Parameters parameters) {
 		this.multiAgentSystem = multiAgentSystem;

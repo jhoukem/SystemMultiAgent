@@ -6,7 +6,8 @@ public class HunterParameters extends Parameters {
 
 	protected int avatarSpeed;
 	protected int hunterSpeed;
-	protected int defenderLife;
+	protected int defenderLifeTime;
+	protected int invulnerabilityTime;
 	protected float wallPercent;
 	
 	
@@ -32,10 +33,17 @@ public class HunterParameters extends Parameters {
 		}
 		
 		try{
-			defenderLife = Integer.parseInt(properties.getProperty("defenderLife"));
+			defenderLifeTime = Integer.parseInt(properties.getProperty("defenderLifeTime"));
 		} catch(NumberFormatException e){
 			e.printStackTrace();
-			defenderLife = 2;
+			defenderLifeTime = (gridWidth * gridHeight)/2;
+		}
+		
+		try{
+			invulnerabilityTime = Integer.parseInt(properties.getProperty("invulnerabilityTime"));
+		} catch(NumberFormatException e){
+			e.printStackTrace();
+			invulnerabilityTime = 10;
 		}
 		
 		try{
@@ -52,7 +60,8 @@ public class HunterParameters extends Parameters {
 		avatarSpeed = 1;
 		hunterSpeed = 2;
 		wallPercent = 0.2f;
-		defenderLife = 5;
+		defenderLifeTime = (gridWidth * gridHeight)/2;
+		invulnerabilityTime = 10;
 	}
 	
 	public int getAvatarSpeed() {
@@ -63,12 +72,16 @@ public class HunterParameters extends Parameters {
 		return hunterSpeed;
 	}
 
-	public int getDefenderLife() {
-		return defenderLife;
+	public int getDefenderLifeTime() {
+		return defenderLifeTime;
 	}
 
 	public float getWallPercent() {
 		return wallPercent;
+	}
+
+	public int getInvulnerabilityTime() {
+		return invulnerabilityTime;
 	}
 
 }

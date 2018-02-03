@@ -18,16 +18,22 @@ public abstract class Environment extends Observable{
 	protected boolean isTorus = false;
 	// Whether to log infos.
 	protected boolean isTrace = false;
-
-	protected List<Agent<?>> agents = new ArrayList<Agent<?>>();
-	protected List<Agent<?>> removePending = new ArrayList<Agent<?>>();
-	protected List<Agent<?>> addPending = new ArrayList<Agent<?>>();
-
+	// The total number of tick for the current simulation.
+	protected int tick;
+	// Whether to stop the simulation.
+	protected boolean stopSimulation = false;
 	// Whether the environment is in the scheduling process (can the agents list be modified directly).
 	protected boolean isScheduling = false;
-
 	// The random object used everywhere we need something random.
 	public final Random random;
+	
+	// The list of the agent to update.
+	protected List<Agent<?>> agents = new ArrayList<Agent<?>>();
+	// The list of the agent to remove after the environment finished updating.
+	protected List<Agent<?>> removePending = new ArrayList<Agent<?>>();
+	// The list of the agent to add after the environment finished updating.
+	protected List<Agent<?>> addPending = new ArrayList<Agent<?>>();
+
 
 	public Environment(Parameters parameters) {
 		initGrid(parameters.getGridWidth(), parameters.getGridHeight());
@@ -53,6 +59,13 @@ public abstract class Environment extends Observable{
 		}
 	}
 
+	/**
+	 * Return the cell for the given coordinates or null of the coordinate are out bounds.
+	 * 
+	 * @param x
+	 * @param y
+	 * @return the cell for the given coordinates or null of the coordinate are out bounds.
+	 */
 	public Cell getCell(int x, int y) {
 
 		if(isTorus) {
@@ -148,6 +161,12 @@ public abstract class Environment extends Observable{
 		return agents;
 	}
 
+	/**
+	 * Whether the agent will be deleted after the current tick.
+	 * 
+	 * @param agent The agent to test.
+	 * @return true if the agent will be deleted after the current tick.
+	 */
 	public boolean isPendingForDeletion(Agent<?> agent) {
 		return removePending.contains(agent);
 	}
@@ -164,10 +183,26 @@ public abstract class Environment extends Observable{
 		return Color.DARK_GRAY;
 	}
 	
+	public boolean isStopSimulation() {
+		return stopSimulation;
+	}
+
+	public void setStopSimulation(boolean stopSimulation) {
+		this.stopSimulation = stopSimulation;
+	}
+	
 	@Override
 	public void notifyObservers() {
 		this.setChanged();
 		super.notifyObservers();
+	}
+	
+	public void tick(){
+		tick++;
+	}
+	
+	public int getTick() {
+		return tick;
 	}
 
 }

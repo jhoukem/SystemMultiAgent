@@ -1,6 +1,5 @@
 package core.model;
 
-import core.scheduler.EquitableStepbyStepScheduler;
 import core.scheduler.Scheduler;
 import core.utils.FPSManager;
 import core.utils.Logger;
@@ -12,8 +11,6 @@ public class MultiAgentSystem {
 	private Environment environment;
 	// A timer to get fixed fps rate.
 	private FPSManager fpsManager = new FPSManager();
-	// The total number of tick for the current simulation.
-	private int tick = 0;
 	// The number of tick to simulate.
 	private int tickToSimulate = 0;
 	// The minimum time between each frame.
@@ -54,7 +51,7 @@ public class MultiAgentSystem {
 					fpsManager.resetTimer();
 
 					if(environment.isTrace()){
-						Logger.log("Tick;"+tick);
+						Logger.log("Tick;"+environment.getTick());
 					}
 					simulateTick();
 				} else {
@@ -70,17 +67,15 @@ public class MultiAgentSystem {
 
 	public void simulateTick() {
 
-		if(tick % refreshRate == 0){
+		if(environment.getTick() % refreshRate == 0){
 			environment.notifyObservers();
 		}
 
 		scheduler.schedule(environment);
-		tick++;
-
 	}
 
 	private boolean needToSimulate() {
-		return tickToSimulate < 0  || tick < tickToSimulate;
+		return tickToSimulate < 0  || environment.getTick() < tickToSimulate;
 	}
 
 	private void sleep(int sleepTime) {
@@ -103,8 +98,12 @@ public class MultiAgentSystem {
 		return paused;
 	}
 
-	public void simulateStep() {
-		((EquitableStepbyStepScheduler)scheduler).canStep = true;
+	public void increaseSleepTime() {
+		this.sleepTime /= 2;
 	}
 	
+	public void decreaseSleepTime() {
+		this.sleepTime *= 2;
+	}
+
 }

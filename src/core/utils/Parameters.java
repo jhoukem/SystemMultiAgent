@@ -8,7 +8,6 @@ import java.util.Properties;
 import core.scheduler.EquitableScheduler;
 import core.scheduler.RandomScheduler;
 import core.scheduler.Scheduler;
-import core.scheduler.SequentialScheduler;
 
 public class Parameters {
 
@@ -138,7 +137,7 @@ public class Parameters {
 		if(schedulerType != null){
 
 			switch(schedulerType){
-			case "sequential": scheduler = new SequentialScheduler(); break;
+			case "sequential": scheduler = new Scheduler(); break;
 			case "random": scheduler = new RandomScheduler(); break;
 			default: scheduler = new EquitableScheduler(); break;
 			}

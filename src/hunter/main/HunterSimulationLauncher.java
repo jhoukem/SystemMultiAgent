@@ -14,14 +14,14 @@ public class HunterSimulationLauncher {
 			System.err.println("You need to supply the properties file name.");
 			return;
 		}
-		
+
 		HunterParameters parameters = new HunterParameters(args[0]);
 		HunterEnvironment environment = new HunterEnvironment(parameters);
-		
+
 		MultiAgentSystem multiAgentSystem = new MultiAgentSystem(environment, parameters);
-		
-		HunterGridView hunterGridView = new HunterGridView(multiAgentSystem, parameters, environment.getPlayerAvatar());
-		
+
+		HunterGridView hunterGridView = new HunterGridView(multiAgentSystem, environment);
+
 		new SMAFrame(multiAgentSystem, parameters, hunterGridView);
 		multiAgentSystem.run();
 	}
