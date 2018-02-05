@@ -70,15 +70,17 @@ public class HunterEnvironment extends Environment {
 			WinnerAgent winnerAgent = new WinnerAgent(this);
 			winnerAgent.initializeRandomPositionAndVelocity();
 			add(winnerAgent);
-		} else {
+		} else if(winnerApparitionCounter > 0){
 
-			if(tick % defenderApparitionCounter == 0){
+			if(defenderApparitionCounter == 0){
 				resetDefenderApparitionCounter();
 
 				// Create the new defender agent.
 				DefenderAgent defAgent = new DefenderAgent(this);
 				defAgent.initializeRandomPositionAndVelocity();
 				add(defAgent);
+			} else {
+				defenderApparitionCounter--;
 			}
 		}
 	}
@@ -145,14 +147,6 @@ public class HunterEnvironment extends Environment {
 
 	public Cell getCellPathToAvatarFrom(int x, int y) {
 		return cameFrom.get(getCell(x, y));
-	}
-
-	public int getWinnerApparitionCounter() {
-		return winnerApparitionCounter;
-	}
-
-	public void setWinnerApparitionCounter(int winnerApparitionCounter) {
-		this.winnerApparitionCounter = winnerApparitionCounter;
 	}
 
 	public int getDefenderApparitionCounter() {

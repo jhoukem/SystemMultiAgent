@@ -32,6 +32,7 @@ public class MultiAgentSystem {
 		sleepTime = parameters.getDelay();
 		scheduler = parameters.getScheduler();
 		environment.setTorique(parameters.isTorus());
+		environment.setTrace(parameters.isTrace());
 		tickToSimulate = parameters.getTicksToSimulate();
 		refreshRate = parameters.getRefreshRate();
 
@@ -49,10 +50,6 @@ public class MultiAgentSystem {
 				fpsManager.updateTimer();
 				if(fpsManager.canUpdate(sleepTime)){
 					fpsManager.resetTimer();
-
-					if(environment.isTrace()){
-						Logger.log("Tick;"+environment.getTick());
-					}
 					simulateTick();
 				} else {
 					sleep(fpsManager.getTimeToSleep(sleepTime));

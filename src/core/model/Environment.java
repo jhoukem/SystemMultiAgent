@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Random;
 
+import core.utils.Logger;
 import core.utils.Parameters;
 
 public abstract class Environment extends Observable{
@@ -26,7 +27,7 @@ public abstract class Environment extends Observable{
 	protected boolean isScheduling = false;
 	// The random object used everywhere we need something random.
 	public final Random random;
-	
+
 	// The list of the agent to update.
 	protected List<Agent<?>> agents = new ArrayList<Agent<?>>();
 	// The list of the agent to remove after the environment finished updating.
@@ -37,7 +38,7 @@ public abstract class Environment extends Observable{
 
 	public Environment(Parameters parameters) {
 		initGrid(parameters.getGridWidth(), parameters.getGridHeight());
-		
+
 		if(parameters.getSeed() > -1){
 			random = new Random(parameters.getSeed());
 		} else {
@@ -128,6 +129,10 @@ public abstract class Environment extends Observable{
 		addPending.clear();
 	}
 
+	public void logInfos(){
+		Logger.log("Tick;"+getTick());
+	}
+
 	public void processPendingOperations() {
 		addNewAgents();
 		removeDeadAgents();
@@ -175,6 +180,10 @@ public abstract class Environment extends Observable{
 		this.isScheduling = isScheduling;
 	}
 
+	public void setTrace(boolean trace) {
+		isTrace = trace;
+	}
+	
 	public boolean isTrace() {
 		return isTrace;
 	}
@@ -182,7 +191,7 @@ public abstract class Environment extends Observable{
 	public Color getBackgroundColor() {
 		return Color.DARK_GRAY;
 	}
-	
+
 	public boolean isStopSimulation() {
 		return stopSimulation;
 	}
@@ -190,17 +199,17 @@ public abstract class Environment extends Observable{
 	public void setStopSimulation(boolean stopSimulation) {
 		this.stopSimulation = stopSimulation;
 	}
-	
+
 	@Override
 	public void notifyObservers() {
 		this.setChanged();
 		super.notifyObservers();
 	}
-	
+
 	public void tick(){
 		tick++;
 	}
-	
+
 	public int getTick() {
 		return tick;
 	}

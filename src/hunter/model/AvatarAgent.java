@@ -28,8 +28,8 @@ public class AvatarAgent extends HunterSimulationAgent {
 		if(environment.isPendingForDeletion(this) || environment.getTick() % speed != 0){
 			return;
 		}
-		
-		if(invulnerableCounter > 0){
+
+		if(isInvulnerable()){
 			invulnerableCounter--;
 			if(invulnerableCounter == 0){
 				environment.decreaseWinnerApparitionCounter();
@@ -52,20 +52,17 @@ public class AvatarAgent extends HunterSimulationAgent {
 
 			if(destination.isEmpty()){
 				moveToPosition(destination.getX(), destination.getY());
-				updatePathMap();
 			} else if(destination.getAgent() instanceof DefenderAgent){
 				environment.remove(destination.getAgent());
 				destination.setAgent(null);
 				invulnerableCounter = environment.getParameters().getInvulnerabilityTime();
 				moveToPosition(destination.getX(), destination.getY());
-				updatePathMap();
 			} else if(destination.getAgent() instanceof WinnerAgent){
 				environment.remove(destination.getAgent());
 				destination.setAgent(null);
 				moveToPosition(destination.getX(), destination.getY());
 				setColor(Color.WHITE);
 				environment.setStopSimulation(true);
-				updatePathMap();
 			}
 			else{
 				setVelocity(0, 0);
@@ -73,6 +70,7 @@ public class AvatarAgent extends HunterSimulationAgent {
 		} else {
 			setVelocity(0, 0);
 		}
+		updatePathMap();
 	}
 
 	private void updatePathMap() {
@@ -96,10 +94,18 @@ public class AvatarAgent extends HunterSimulationAgent {
 				}
 				if(!pathMap.containsKey(cell)){
 					frontier.add(cell);
-					pathMap.put(cell, current);
+					if(isInvulnerable()){
+						pathMap.put(current, cell);
+					} else {
+						pathMap.put(cell, current);
+					}
 				}
 			}
 		}
+	}
+	
+	public boolean isInvulnerable(){
+		return invulnerableCounter > 0;
 	}
 
 	public static AvatarAgent getAvatarInstance(HunterEnvironment environment){

@@ -2,6 +2,8 @@ package wator.model;
 
 import java.awt.Color;
 
+import core.utils.Logger;
+
 public class PreyAgent extends WatorAgent {
 
 	public PreyAgent(WatorEnvironment environment) {
@@ -47,5 +49,9 @@ public class PreyAgent extends WatorAgent {
 	@Override
 	public String toString() {
 		return "Prey"+super.toString()+" timeToLive="+timeToLive;
+	}
+	
+	public void logInfos() {
+		Logger.log("PreyAgent bird;");
 	}
 }

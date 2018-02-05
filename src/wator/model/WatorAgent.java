@@ -11,6 +11,10 @@ public abstract class WatorAgent extends Agent<WatorEnvironment> {
 	
 	public WatorAgent(WatorEnvironment environment) {
 		super(environment);
+		
+		if(environment.isTrace()){
+//			logInfos();
+		}
 	}
 	
 	@Override

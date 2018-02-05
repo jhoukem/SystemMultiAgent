@@ -45,7 +45,6 @@ public abstract class Agent <E extends Environment>{
 
 	public void logInfos() {
 		Logger.log("Agent;"+ id +";"+ x +";"+ y +";"+ velocityX +";"+ velocityY);
-
 	}
 
 	public void invertVeclocity() {

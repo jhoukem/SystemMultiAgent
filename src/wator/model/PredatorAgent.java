@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import core.model.Cell;
+import core.utils.Logger;
 
 public class PredatorAgent extends WatorAgent{
 
@@ -75,7 +76,6 @@ public class PredatorAgent extends WatorAgent{
 		moveToPosition(prey.getX(), prey.getY());
 		// Stay alive longer.
 		starvingTime = starvingTimeDefault;
-		//		timeToLive += 3;
 	}
 
 	private PreyAgent getRandomPreyAround() {
@@ -106,4 +106,7 @@ public class PredatorAgent extends WatorAgent{
 		return "Predator"+super.toString();
 	}
 
+	public void logInfos() {
+		Logger.log("PredatorAgent bird;");
+	}
 }

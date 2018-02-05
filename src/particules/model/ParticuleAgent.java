@@ -37,10 +37,6 @@ public class ParticuleAgent extends Agent<ParticulesEnviroment>{
 	@Override
 	public void decide(){
 
-		if(environment.getCell(x, y).getAgent() != this){
-			System.err.println("Collision:");
-		}
-		
 		Cell destination = environment.getCell(getNextX(), getNextY());
 
 		// Out of bound.
@@ -55,12 +51,15 @@ public class ParticuleAgent extends Agent<ParticulesEnviroment>{
 		} else if(destination.isEmpty()) {
 			moveToPosition(destination.getX(), destination.getY());
 		} else {
-			Agent<?> collider = destination.getAgent();
-			swapVelocity(collider);
-			setColor(Color.RED);
-			collider.setColor(getColor());
+			collideWith(destination.getAgent());
 		}
 
+	}
+
+	protected void collideWith(Agent<?> collider) {
+		swapVelocity(collider);
+		setColor(Color.RED);
+		collider.setColor(getColor());
 	}
 
 	private void bounce() {
@@ -72,7 +71,7 @@ public class ParticuleAgent extends Agent<ParticulesEnviroment>{
 		}
 	}
 
-	private void swapVelocity(Agent<?> collider) {
+	protected void swapVelocity(Agent<?> collider) {
 		int colliderVelocityX = collider.getVelocityX();
 		int colliderVelocityY = collider.getVelocityY();
 

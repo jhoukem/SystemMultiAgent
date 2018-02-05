@@ -8,6 +8,11 @@ import core.model.Environment;
 public class Scheduler {
 
 	public void schedule(Environment environment){
+		
+		if(environment.isTrace()){
+			environment.logInfos();
+		}
+		
 		List<Agent<?>> agents = getAgentToSchedule(environment);
 		if(!environment.isStopSimulation()){
 			environment.setScheduling(true);
