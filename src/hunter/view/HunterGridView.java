@@ -25,7 +25,7 @@ public class HunterGridView extends GridView {
 
 	@Override
 	public void keyPressed(KeyEvent key) {
-		
+		System.out.println("Pressed !");
 		switch(key.getKeyCode()){
 		case KeyEvent.VK_ESCAPE: environment.reset(); break;
 		case KeyEvent.VK_SPACE: multiAgentSystem.pause(); break;

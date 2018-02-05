@@ -16,12 +16,12 @@ public abstract class HunterSimulationAgent extends Agent<HunterEnvironment>{
 	}
 	
 	public void decreaseSpeed() {
-		speed ++;
+		speed *= 2;
 	}
 
 	public void increaseSpeed() {
 		if(speed > 1){
-			speed --;
+			speed /= 2;
 		}
 	}
 	

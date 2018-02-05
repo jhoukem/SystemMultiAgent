@@ -19,19 +19,19 @@ public class HunterEnvironment extends Environment {
 	private final HashMap<Cell, Cell> cameFrom = new HashMap<Cell, Cell>();
 	private int winnerApparitionCounter = 4;
 
-	private int defenderApparitionCounter;
+	private int defenderApparitionCounter = 0;
 
 
 	public HunterEnvironment(HunterParameters parameters) {
 		super(parameters);
 		this.parameters = parameters;
-		resetDefenderApparitionCounter();
+		defenderApparitionCounter = 0;
 		loadAgents();
 	}
 
 
 	public void resetDefenderApparitionCounter(){
-		defenderApparitionCounter = 250 + random.nextInt(251);
+		defenderApparitionCounter = parameters.getDefenderLifeTime()+ random.nextInt(251);
 	}
 
 	@Override
@@ -119,8 +119,8 @@ public class HunterEnvironment extends Environment {
 
 		agents.clear();
 		cameFrom.clear();
-		playerAvatar.setVelocity(0, 0);
-		resetDefenderApparitionCounter();
+		playerAvatar.reset();
+		defenderApparitionCounter = 0;
 		winnerApparitionCounter = 4;
 
 		for (int i = 0; i < grid.length; i++) {

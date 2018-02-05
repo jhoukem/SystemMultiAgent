@@ -14,7 +14,6 @@ public class HunterAgent extends HunterSimulationAgent {
 
 	@Override
 	public void decide() {
-
 		if(environment.getTick() % speed != 0){
 			return;
 		}

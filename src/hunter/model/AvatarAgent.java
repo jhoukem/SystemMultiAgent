@@ -1,6 +1,7 @@
 package hunter.model;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -32,6 +33,7 @@ public class AvatarAgent extends HunterSimulationAgent {
 		if(isInvulnerable()){
 			invulnerableCounter--;
 			if(invulnerableCounter == 0){
+				setColor(Color.BLUE);
 				environment.decreaseWinnerApparitionCounter();
 			}
 		}
@@ -57,11 +59,12 @@ public class AvatarAgent extends HunterSimulationAgent {
 				destination.setAgent(null);
 				invulnerableCounter = environment.getParameters().getInvulnerabilityTime();
 				moveToPosition(destination.getX(), destination.getY());
+				setColor(Color.MAGENTA);
 			} else if(destination.getAgent() instanceof WinnerAgent){
 				environment.remove(destination.getAgent());
 				destination.setAgent(null);
-				moveToPosition(destination.getX(), destination.getY());
 				setColor(Color.WHITE);
+				moveToPosition(destination.getX(), destination.getY());
 				environment.setStopSimulation(true);
 			}
 			else{
@@ -70,7 +73,10 @@ public class AvatarAgent extends HunterSimulationAgent {
 		} else {
 			setVelocity(0, 0);
 		}
+
+		long time = System.currentTimeMillis();
 		updatePathMap();
+		System.out.println("time to calculate the path to avatar = "+ (System.currentTimeMillis() - time)+" in ms.");
 	}
 
 	private void updatePathMap() {
@@ -89,21 +95,26 @@ public class AvatarAgent extends HunterSimulationAgent {
 			Cell current = frontier.poll();
 
 			for(Cell cell : environment.getNeighbors(current)){
-				if(cell == null || cell.getAgent() instanceof WallAgent){
+				if(cell == null || cell.getAgent() instanceof WallAgent || cell.getAgent() instanceof DefenderAgent
+						|| cell.getAgent() instanceof WinnerAgent){
 					continue;
 				}
-				if(!pathMap.containsKey(cell)){
-					frontier.add(cell);
-					if(isInvulnerable()){
+
+				if(isInvulnerable()){
+					if(!pathMap.containsKey(cell)){
+						frontier.add(cell);
 						pathMap.put(current, cell);
-					} else {
+					}
+				} else {
+					if(!pathMap.containsKey(cell)){
+						frontier.add(cell);
 						pathMap.put(cell, current);
 					}
 				}
 			}
 		}
 	}
-	
+
 	public boolean isInvulnerable(){
 		return invulnerableCounter > 0;
 	}
@@ -114,5 +125,11 @@ public class AvatarAgent extends HunterSimulationAgent {
 			avatar = new AvatarAgent(environment);
 		}
 		return avatar;
+	}
+
+
+	public void reset() {
+		setVelocity(0, 0);
+		setColor(Color.BLUE);
 	}
 }
