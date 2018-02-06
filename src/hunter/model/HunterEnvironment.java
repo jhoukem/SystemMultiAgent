@@ -16,7 +16,7 @@ public class HunterEnvironment extends Environment {
 	private Color backgroundColor = new Color(205,133,63);
 
 	private final ArrayList<Cell> neighbors = new ArrayList<Cell>();
-	private final HashMap<Cell, Cell> cameFrom = new HashMap<Cell, Cell>();
+	private final HashMap<Cell, Integer> cameFrom = new HashMap<Cell, Integer>();
 	private int winnerApparitionCounter = 4;
 
 	private int defenderApparitionCounter = 0;
@@ -145,10 +145,6 @@ public class HunterEnvironment extends Environment {
 		return backgroundColor;
 	}
 
-	public Cell getCellPathToAvatarFrom(int x, int y) {
-		return cameFrom.get(getCell(x, y));
-	}
-
 	public int getDefenderApparitionCounter() {
 		return defenderApparitionCounter;
 	}
@@ -157,7 +153,7 @@ public class HunterEnvironment extends Environment {
 		this.defenderApparitionCounter = defenderApparitionCounter;
 	}
 
-	public HashMap<Cell, Cell> getPathMap() {
+	public HashMap<Cell, Integer> getPathMap() {
 		return cameFrom;
 	}
 

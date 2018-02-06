@@ -1,7 +1,6 @@
 package hunter.model;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -73,43 +72,31 @@ public class AvatarAgent extends HunterSimulationAgent {
 		} else {
 			setVelocity(0, 0);
 		}
-
-		long time = System.currentTimeMillis();
 		updatePathMap();
-		System.out.println("time to calculate the path to avatar = "+ (System.currentTimeMillis() - time)+" in ms.");
 	}
 
 	private void updatePathMap() {
 
-		HashMap<Cell, Cell> pathMap = environment.getPathMap();
+		HashMap<Cell, Integer> pathMap = environment.getPathMap();
 		pathMap.clear();
 		frontier.clear();
 
 		Cell avatarCell = environment.getCell(x, y);
 		// Add the avatar's cell as the starting node.
 		frontier.add(avatarCell);
-		// No more cell to follow when we are on the avatar's cell.
-		pathMap.put(avatarCell, null);
+		// Mark the distance to the starting cell.
+		pathMap.put(avatarCell, 0);
 
 		while(!frontier.isEmpty()){
 			Cell current = frontier.poll();
 
 			for(Cell cell : environment.getNeighbors(current)){
-				if(cell == null || cell.getAgent() instanceof WallAgent || cell.getAgent() instanceof DefenderAgent
-						|| cell.getAgent() instanceof WinnerAgent){
+				if(cell == null || cell.getAgent() instanceof WallAgent){
 					continue;
 				}
-
-				if(isInvulnerable()){
-					if(!pathMap.containsKey(cell)){
-						frontier.add(cell);
-						pathMap.put(current, cell);
-					}
-				} else {
-					if(!pathMap.containsKey(cell)){
-						frontier.add(cell);
-						pathMap.put(cell, current);
-					}
+				if(!pathMap.containsKey(cell)){
+					frontier.add(cell);
+					pathMap.put(cell, pathMap.get(current)+1);
 				}
 			}
 		}
