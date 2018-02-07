@@ -50,7 +50,7 @@ public class HunterEnvironment extends Environment {
 		int wallCount = (int)(parameters.getWallPercent() * (getWidth()*getHeight()));
 
 		for(int i = 0; i < wallCount; i++){
-			WallAgent agent = new WallAgent(this);
+			WallAgent agent = new MovingWallAgent(this);
 			agent.initializeRandomPositionAndVelocity();
 			add(agent);
 		}

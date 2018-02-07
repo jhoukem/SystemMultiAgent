@@ -4,8 +4,8 @@ import java.awt.Color;
 
 public class WallAgent extends HunterSimulationAgent{
 
-	public WallAgent(HunterEnvironment grid) {
-		super(grid);
+	public WallAgent(HunterEnvironment environment) {
+		super(environment);
 		setColor(Color.GRAY);
 	}
 

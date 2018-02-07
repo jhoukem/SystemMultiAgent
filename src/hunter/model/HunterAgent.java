@@ -45,9 +45,10 @@ public class HunterAgent extends HunterSimulationAgent {
 		neighbors.clear();
 
 		for(Cell cell : cellNeighbors){
-			if(cell == null || cell.getAgent() instanceof WallAgent){
+			if(cell == null || cell.getAgent() instanceof WallAgent || environment.getPathMap().get(cell) == null){
 				continue;
 			}
+			
 			int neighborsDistance = environment.getPathMap().get(cell);
 			int currentDistance = environment.getPathMap().get(environment.getCell(x, y));
 			if( (furtherCell && (neighborsDistance > currentDistance)) || (!furtherCell && (neighborsDistance < currentDistance)) ){

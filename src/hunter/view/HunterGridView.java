@@ -1,7 +1,9 @@
 package hunter.view;
 
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
+import core.model.Cell;
 import core.model.MultiAgentSystem;
 import core.view.GridView;
 import hunter.model.AvatarAgent;
@@ -11,7 +13,7 @@ public class HunterGridView extends GridView {
 
 	private AvatarAgent playerAvatar;
 	protected HunterEnvironment environment;
-	
+
 	/**
 	 * 
 	 */
@@ -21,6 +23,27 @@ public class HunterGridView extends GridView {
 		super(multiAgentSystem, environment.getParameters());
 		this.environment = environment;
 		this.playerAvatar = environment.getPlayerAvatar();
+	}
+
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		if(environment.getParameters().isShowDijkstra()){
+			paintDijkstra(g);
+		}
+	}
+
+
+	private void paintDijkstra(Graphics g) {
+		for (int i = 0; i < environment.getHeight(); i++) {
+			for (int j = 0; j < environment.getWidth(); j++) {
+				
+				Cell cell = environment.getCell(j, i);
+				g.drawString(""+environment.getPathMap().get(cell), j * cellSize + widthPadding, (i+1) * cellSize + heightPadding);
+			}
+		}
+
+
 	}
 
 	@Override

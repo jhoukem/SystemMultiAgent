@@ -56,7 +56,7 @@ public class GridView extends JPanel implements Observer, KeyListener{
 
 		if(cellSizeAuto){
 			// Get the correct size based on the grid size and the frame size.
-			cellSize = getCorrectSize() / ((environment.getWidth() > environment.getHeight()) ? environment.getWidth() : environment.getHeight());
+			cellSize = getLimitingDimensionSize() / ((environment.getWidth() > environment.getHeight()) ? environment.getWidth() : environment.getHeight());
 
 			widthPadding = (this.getWidth() - environment.getWidth() * cellSize) / 2;
 			heightPadding = (this.getHeight() - environment.getHeight() * cellSize) / 2;
@@ -84,7 +84,7 @@ public class GridView extends JPanel implements Observer, KeyListener{
 		}
 	}
 
-	private int getCorrectSize() {
+	private int getLimitingDimensionSize() {
 		return this.getWidth() > this.getHeight() ? this.getHeight() : this.getWidth();
 	}
 
