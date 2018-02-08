@@ -10,6 +10,7 @@ public class HunterParameters extends Parameters {
 	protected int invulnerabilityTime;
 	protected float wallPercent;
 	protected boolean showDijkstra;
+	protected boolean movingWall;
 	
 	public HunterParameters(String paramPath){
 		super(paramPath);
@@ -19,6 +20,7 @@ public class HunterParameters extends Parameters {
 		super.setParams();
 		
 		showDijkstra = Boolean.parseBoolean(properties.getProperty("showDijkstra"));
+		movingWall = Boolean.parseBoolean(properties.getProperty("movingWall"));
 		
 		try{
 			avatarSpeed = Integer.parseInt(properties.getProperty("avatarSpeed"));
@@ -65,6 +67,7 @@ public class HunterParameters extends Parameters {
 		defenderLifeTime = (gridWidth * gridHeight)/2;
 		invulnerabilityTime = 10;
 		showDijkstra = false;
+		movingWall = false;
 	}
 	
 	public int getAvatarSpeed() {
@@ -89,6 +92,10 @@ public class HunterParameters extends Parameters {
 	
 	public boolean isShowDijkstra() {
 		return showDijkstra;
+	}
+	
+	public boolean isMovingWall(){
+		return movingWall;
 	}
 
 }

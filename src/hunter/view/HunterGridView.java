@@ -37,9 +37,11 @@ public class HunterGridView extends GridView {
 	private void paintDijkstra(Graphics g) {
 		for (int i = 0; i < environment.getHeight(); i++) {
 			for (int j = 0; j < environment.getWidth(); j++) {
-				
+
 				Cell cell = environment.getCell(j, i);
-				g.drawString(""+environment.getPathMap().get(cell), j * cellSize + widthPadding, (i+1) * cellSize + heightPadding);
+				if(environment.getPathMap().get(cell) != null){
+					g.drawString(""+environment.getPathMap().get(cell), j * cellSize + widthPadding, (i+1) * cellSize + heightPadding);
+				}
 			}
 		}
 
