@@ -52,6 +52,6 @@ public class PreyAgent extends WatorAgent {
 	}
 	
 	public void logInfos() {
-		Logger.log("PreyAgent bird;");
+		Logger.logn("PreyAgent bird;");
 	}
 }

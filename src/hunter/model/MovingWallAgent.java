@@ -28,7 +28,7 @@ public class MovingWallAgent extends WallAgent{
 
 		Cell destination = environment.getCell(getNextX(), getNextY());
 
-		if(destination != null & destination.isEmpty()){
+		if(destination != null && destination.isEmpty()){
 			moveToPosition(destination.getX(), destination.getY());
 			return true;
 		}

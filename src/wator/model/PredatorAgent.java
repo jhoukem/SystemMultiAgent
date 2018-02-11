@@ -44,6 +44,11 @@ public class PredatorAgent extends WatorAgent{
 			System.err.println("Error: the current cell is the grid does not correspond to this agent"+this);
 		}
 		
+		if(starvingTime > 1){
+			tryToMoveRandomly();
+			return;
+		} 
+		
 		PreyAgent prey = getRandomPreyAround();
 
 		if(prey != null){
@@ -75,7 +80,7 @@ public class PredatorAgent extends WatorAgent{
 		// Move to the last prey position.
 		moveToPosition(prey.getX(), prey.getY());
 		// Stay alive longer.
-		starvingTime = starvingTimeDefault;
+		starvingTime += starvingTimeDefault;
 	}
 
 	private PreyAgent getRandomPreyAround() {
@@ -107,6 +112,6 @@ public class PredatorAgent extends WatorAgent{
 	}
 
 	public void logInfos() {
-		Logger.log("PredatorAgent bird;");
+		Logger.logn("PredatorAgent bird;");
 	}
 }

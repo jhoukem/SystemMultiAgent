@@ -1,11 +1,11 @@
-package particules.main;
+package particles.main;
 
 import core.model.MultiAgentSystem;
 import core.view.SMAFrame;
-import particules.model.ParticulesEnviroment;
-import particules.utils.ParticulesParameters;
+import particles.model.ParticlesEnviroment;
+import particles.utils.ParticlesParameters;
 
-public class ParticuleSimulationLauncher {
+public class ParticleSimulationLauncher {
 
 	public static void main(String[] args) {
 
@@ -14,8 +14,8 @@ public class ParticuleSimulationLauncher {
 			return;
 		}
 		
-		ParticulesParameters parameters = new ParticulesParameters(args[0]);
-		ParticulesEnviroment environment = new ParticulesEnviroment(parameters);
+		ParticlesParameters parameters = new ParticlesParameters(args[0]);
+		ParticlesEnviroment environment = new ParticlesEnviroment(parameters);
 		
 		MultiAgentSystem multiAgentSystem = new MultiAgentSystem(environment, parameters);
 		new SMAFrame(multiAgentSystem, parameters);

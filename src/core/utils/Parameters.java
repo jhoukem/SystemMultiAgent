@@ -29,7 +29,7 @@ public class Parameters {
 	public Parameters(String paramPath){
 		properties = new Properties();
 		try {
-			properties.load(new FileInputStream(new File("src/"+paramPath+".properties")));
+			properties.load(new FileInputStream(new File(paramPath+".properties")));
 			setParams();
 		} catch (IOException e) {
 			setDefaultParams();
@@ -151,10 +151,17 @@ public class Parameters {
 		isTorus = false;
 		gridWidth = 10;
 		gridHeight = 10;
+		cellSize = 0;
+		width = 900;
+		height = 720;
 		delay = 100;
+		refreshRate = 1;
 		scheduler = new EquitableScheduler();
-		ticks = 0;
-		seed = 1;
+		ticks = -1;
+		seed = -1;
+		trace = false;
+		displayGrid = false;
+		logFile = "log.csv";
 		agentCount = (int) (gridWidth * gridHeight * 0.2f);
 	}
 

@@ -23,7 +23,22 @@ public class Logger {
 	}
 	
 	public static void log(String text){
+		writer.print(text);
+		writer.flush();
+	}
+	
+	public static void log(int val){
+		writer.print(val);
+		writer.flush();
+	}
+	
+	public static void logn(String text){
 		writer.println(text);
+		writer.flush();
+	}
+	
+	public static void logn(int val){
+		writer.println(val);
 		writer.flush();
 	}
 

@@ -53,9 +53,9 @@ public class HunterEnvironment extends Environment {
 			
 			WallAgent agent;
 			if(parameters.isMovingWall()){
-				agent = new WallAgent(this);
-			} else {
 				agent = new MovingWallAgent(this);
+			} else {
+				agent = new WallAgent(this);
 			}
 			agent.initializeRandomPositionAndVelocity();
 			add(agent);

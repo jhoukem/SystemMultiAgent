@@ -130,7 +130,7 @@ public abstract class Environment extends Observable{
 	}
 
 	public void logInfos(){
-		Logger.log("Tick;"+getTick());
+		Logger.log(getTick()+";");
 	}
 
 	public void processPendingOperations() {

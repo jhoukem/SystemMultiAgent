@@ -1,18 +1,18 @@
-package particules.model;
+package particles.model;
 
 import java.awt.Color;
 
 import core.model.Agent;
 import core.model.Cell;
 
-public class ParticuleAgent extends Agent<ParticulesEnviroment>{
+public class ParticleAgent extends Agent<ParticlesEnviroment>{
 
 	// The counter for the color to change back to default.
 	private int colorCounter = 0;
 	// The delay (in ticks) before the color is changed back to default).
 	private int colorCounterDelay;
 
-	public ParticuleAgent(ParticulesEnviroment environment) {
+	public ParticleAgent(ParticlesEnviroment environment) {
 		super(environment);
 		this.colorCounterDelay = environment.getParameters().getColorCounterDelay();
 		setColor(Color.GRAY);

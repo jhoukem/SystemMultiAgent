@@ -1,13 +1,13 @@
-package particules.utils;
+package particles.utils;
 
 import core.utils.Parameters;
 
-public class ParticulesParameters extends Parameters {
+public class ParticlesParameters extends Parameters {
 
 	protected int colorCounterDelay;
 	protected String agentType;
 	
-	public ParticulesParameters(String paramPath){
+	public ParticlesParameters(String paramPath){
 		super(paramPath);
 	}
 

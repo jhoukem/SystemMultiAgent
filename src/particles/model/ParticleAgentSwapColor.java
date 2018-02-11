@@ -1,12 +1,12 @@
-package particules.model;
+package particles.model;
 
 import java.awt.Color;
 
 import core.model.Agent;
 
-public class ParticuleAgentSwapColor extends ParticuleAgent{
+public class ParticleAgentSwapColor extends ParticleAgent{
 
-	public ParticuleAgentSwapColor(ParticulesEnviroment environment) {
+	public ParticleAgentSwapColor(ParticlesEnviroment environment) {
 		super(environment);
 	}
 	

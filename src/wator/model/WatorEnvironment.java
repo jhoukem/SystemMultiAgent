@@ -49,8 +49,8 @@ public class WatorEnvironment extends Environment{
 			}
 		}
 		
-		Logger.log("Predator;"+predatorCount);
-		Logger.log("Prey;"+preyCount);
+		Logger.log(predatorCount+";");
+		Logger.logn(preyCount);
 	}
 	
 	public WatorParameters getParameters() {
