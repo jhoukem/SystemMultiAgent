@@ -20,8 +20,6 @@ public class MazeGenerator {
 	private final static ArrayList<Cell> visited = new ArrayList<Cell>();
 	private final static Stack<Cell> stack = new Stack<Cell>();
 
-	private static int distance = 0;
-
 	public static void generateMaze(HunterEnvironment environment){
 
 		fillGridWithWalls(environment);
@@ -34,7 +32,7 @@ public class MazeGenerator {
 			for(int j = 0; j < environment.getWidth(); j++){
 				float alea = environment.random.nextFloat();
 				Cell cell = environment.getCell(j, i);
-				if(doesCellHavePathAround(environment, cell)){
+				if(getAnEmptyCellAroundCount(environment, cell) > 1){
 					if(alea < environment.getParameters().getSpacedAreaPercent()){
 						environment.remove(cell.getAgent());
 						cell.setAgent(null);
@@ -65,8 +63,8 @@ public class MazeGenerator {
 				nextDirection = DIRECTION[index];
 				nextCell = environment.getCell(current.getX() + nextDirection[X]*MAZE_SEGMENT_SIZE, current.getY() +  + nextDirection[Y]*MAZE_SEGMENT_SIZE);
 
-				if(nextCell != null && !visited.contains(nextCell) && !doesCellHavePathAround(environment, nextCell)){
-					createPathFromTo(environment, current, nextDirection);
+				if(nextCell != null && !visited.contains(nextCell) && !hasAnEmptyCellAround(environment, nextCell)){
+					createPathFrom(environment, current, nextDirection);
 					pathFound = true;
 					break;
 				}
@@ -82,7 +80,7 @@ public class MazeGenerator {
 		}
 	}
 
-	private static void createPathFromTo(HunterEnvironment environment, Cell current, int[] direction) {
+	private static void createPathFrom(HunterEnvironment environment, Cell current, int[] direction) {
 
 		Cell cell = null;
 
@@ -96,9 +94,6 @@ public class MazeGenerator {
 			environment.remove(cell.getAgent());
 			cell.setAgent(null);
 			visited.add(cell);
-			//			if(!environment.getPathMap().containsKey(cell)){
-			//				environment.getPathMap().put(cell, distance++);
-			//			}
 		}
 
 		// Only add the last cell to the frontier.
@@ -106,14 +101,19 @@ public class MazeGenerator {
 
 	}
 
-	private static boolean doesCellHavePathAround(HunterEnvironment environment, Cell nextCell) {
-
+	private static boolean hasAnEmptyCellAround(HunterEnvironment environment, Cell nextCell) {
+		return getAnEmptyCellAroundCount(environment, nextCell) > 0;
+	}
+	
+	
+	private static int getAnEmptyCellAroundCount(HunterEnvironment environment, Cell nextCell) {
+		int count = 0;
 		for(Cell cell : environment.getNeighbors(nextCell)){
 			if(cell != null && cell.isEmpty()){
-				return true;
+				count++;
 			}
 		}
-		return false;
+		return count;
 	}
 
 	private static void fillGridWithWalls(HunterEnvironment environment) {
