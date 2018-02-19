@@ -34,5 +34,10 @@ public class Cell {
 	public boolean isEmpty() {
 		return this.agent == null;
 	}
+	
+	@Override
+	public String toString() {
+		return "Cell["+x+"]["+y+"]="+agent;
+	}
 
 }

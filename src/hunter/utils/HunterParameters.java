@@ -8,7 +8,8 @@ public class HunterParameters extends Parameters {
 	protected int hunterSpeed;
 	protected int defenderLifeTime;
 	protected int invulnerabilityTime;
-	protected float wallPercent;
+	protected int mazeSegmentSize;
+	protected float spacedAreaPercent;
 	protected boolean showDijkstra;
 	protected boolean movingWall;
 	
@@ -38,37 +39,76 @@ public class HunterParameters extends Parameters {
 		
 		try{
 			defenderLifeTime = Integer.parseInt(properties.getProperty("defenderLifeTime"));
+			if(defenderLifeTime <= 0){
+				defenderLifeTime = gridWidth * gridHeight;
+			}
 		} catch(NumberFormatException e){
 			e.printStackTrace();
-			defenderLifeTime = (gridWidth * gridHeight)/2;
+			defenderLifeTime = gridWidth * gridHeight;
 		}
 		
 		try{
 			invulnerabilityTime = Integer.parseInt(properties.getProperty("invulnerabilityTime"));
+			if(invulnerabilityTime <= 0){
+				invulnerabilityTime = (gridWidth + gridHeight)/2;
+			}
 		} catch(NumberFormatException e){
 			e.printStackTrace();
-			invulnerabilityTime = 10;
+			invulnerabilityTime = (gridWidth + gridHeight)/2;
 		}
 		
 		try{
-			wallPercent = Float.parseFloat(properties.getProperty("wallPercent"));
+			spacedAreaPercent = Float.parseFloat(properties.getProperty("spacedAreaPercent"));
+			spacedAreaPercent = Math.min(1f, spacedAreaPercent);
 		} catch(NumberFormatException e){
 			e.printStackTrace();
-			wallPercent = 0.2f;
+			spacedAreaPercent = 0.33f;
+		}
+		
+		try{
+			mazeSegmentSize = Integer.parseInt(properties.getProperty("mazeSegmentSize"));
+			if(mazeSegmentSize < 2 ){
+				System.err.println("Error the maze segment size must be >= 2");
+				mazeSegmentSize = 2;
+			}
+		} catch(NumberFormatException e){
+			e.printStackTrace();
+			mazeSegmentSize = 2;
+		}
+		
+		boolean defaultAgentCount = false;
+		
+		try{
+			agentCount = Integer.parseInt(properties.getProperty("agentCount"));
+			if(agentCount <= 0){
+				defaultAgentCount = true;
+			} else if(agentCount > gridWidth*gridHeight){
+				defaultAgentCount = true;
+				System.err.println("The number of agents is superior of the number of cell ( "+gridWidth * gridHeight+" agents max)");
+			}
+		} catch(NumberFormatException e){
+			defaultAgentCount = true;
+			e.printStackTrace();
+		}
+		
+		if(defaultAgentCount){
+			agentCount = (int) (gridWidth * gridHeight * 0.02f);
 		}
 	}
 	
+
 	@Override
 	protected void setDefaultParams() {
 		super.setDefaultParams();
 		avatarSpeed = 1;
 		hunterSpeed = 2;
-		wallPercent = 0.2f;
-		defenderLifeTime = (gridWidth * gridHeight)/2;
-		invulnerabilityTime = 10;
+		spacedAreaPercent = 0.33f;
+		defenderLifeTime = (gridWidth * gridHeight);
+		invulnerabilityTime = (gridWidth + gridHeight)/2;
 		showDijkstra = false;
 		movingWall = true;
 		agentCount = 5;
+		mazeSegmentSize = 2;
 	}
 	
 	public int getAvatarSpeed() {
@@ -83,8 +123,8 @@ public class HunterParameters extends Parameters {
 		return defenderLifeTime;
 	}
 
-	public float getWallPercent() {
-		return wallPercent;
+	public float getSpacedAreaPercent() {
+		return spacedAreaPercent;
 	}
 
 	public int getInvulnerabilityTime() {
@@ -99,4 +139,7 @@ public class HunterParameters extends Parameters {
 		return movingWall;
 	}
 
+	public int getMazeSegmentSize() {
+		return mazeSegmentSize;
+	}
 }

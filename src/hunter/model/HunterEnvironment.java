@@ -8,6 +8,7 @@ import core.model.Agent;
 import core.model.Cell;
 import core.model.Environment;
 import hunter.utils.HunterParameters;
+import hunter.utils.MazeGenerator;
 
 public class HunterEnvironment extends Environment {
 
@@ -25,6 +26,8 @@ public class HunterEnvironment extends Environment {
 	public HunterEnvironment(HunterParameters parameters) {
 		super(parameters);
 		this.parameters = parameters;
+		MazeGenerator.MAZE_SEGMENT_SIZE = parameters.getMazeSegmentSize();
+		MazeGenerator.generateMaze(this);
 		defenderApparitionCounter = 0;
 		loadAgents();
 	}
@@ -36,6 +39,7 @@ public class HunterEnvironment extends Environment {
 
 	@Override
 	protected void loadAgents() {
+		
 
 		playerAvatar = AvatarAgent.getAvatarInstance(this);
 		playerAvatar.initPosition(getWidth()/2, getHeight()/2);
@@ -46,21 +50,7 @@ public class HunterEnvironment extends Environment {
 			agent.initializeRandomPositionAndVelocity();
 			add(agent);
 		}
-
-		int wallCount = (int)(parameters.getWallPercent() * (getWidth()*getHeight()));
-
-		for(int i = 0; i < wallCount; i++){
-			
-			WallAgent agent;
-			if(parameters.isMovingWall()){
-				agent = new MovingWallAgent(this);
-			} else {
-				agent = new WallAgent(this);
-			}
-			agent.initializeRandomPositionAndVelocity();
-			add(agent);
-		}
-
+		
 	}
 
 	@Override
@@ -134,7 +124,8 @@ public class HunterEnvironment extends Environment {
 				grid[i][j].setAgent(null);
 			}
 		}
-
+		
+		MazeGenerator.generateMaze(this);
 		loadAgents();
 	}
 

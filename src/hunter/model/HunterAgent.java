@@ -7,6 +7,7 @@ import core.model.Cell;
 
 public class HunterAgent extends HunterSimulationAgent {
 
+	private static final int MINIMAL_DISTANCE_FROM_AVATARON_START = 5;
 	private final static ArrayList<Cell> neighbors = new ArrayList<Cell>();
 
 	public HunterAgent(HunterEnvironment environment) {
@@ -69,6 +70,22 @@ public class HunterAgent extends HunterSimulationAgent {
 		avatarCell.setAgent(null);
 		moveToPosition(avatarCell.getX(), avatarCell.getY());
 		environment.setStopSimulation(true);
+	}
+	
+	@Override
+	public void initializeRandomPositionAndVelocity() {
+
+		do {
+			x = environment.random.nextInt(environment.getWidth());
+			y = environment.random.nextInt(environment.getHeight());
+		} while(!environment.isCellEmpty(x, y) || !isFarEnoughFromAvatar());
+
+		initPosition(x, y);
+		updateRandomDirection();
+	}
+
+	private boolean isFarEnoughFromAvatar() {
+		return Math.abs(environment.getPlayerAvatar().getX() - x) > MINIMAL_DISTANCE_FROM_AVATARON_START && Math.abs(environment.getPlayerAvatar().getY() - y) > MINIMAL_DISTANCE_FROM_AVATARON_START;
 	}
 
 }
